@@ -4,6 +4,7 @@ function Image(bitmap, x as Float, y as Float, width = invalid as Float, height 
     if height = invalid then height = bitmap.GetHeight()
     
     this = {
+        type; "Image"
         x: x
         y: y
         width: width
