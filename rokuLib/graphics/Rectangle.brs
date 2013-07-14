@@ -7,6 +7,7 @@
 '@return the Rectangle object
 Function Rectangle(x as Float, y as Float, width as Float, height as Float, rgba as Integer) as Object
     this = {
+        type: "Rectangle"
         x: x
         y: y
         width: width
