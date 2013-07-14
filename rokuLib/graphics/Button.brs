@@ -3,7 +3,7 @@
 '@param action a {@link String} representing the Button's action
 '@return a Button object
 '@see TextBox
-Function Button(text as String, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
+function Button(text as String, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
     this = {
         type: "Button"
         text: text
@@ -20,12 +20,12 @@ Function Button(text as String, action as String, defaultBitmap as Object, focus
     }
 
     return this
-End Function
+end function
 
 'Draws this Button to the specified screen
 '@param screen an roScreen object
 '@return true if successful {@link TextBox}
-Function Button_Draw(screen as Object) as Boolean
+function Button_Draw(screen as Object) as Boolean
     if m.focused
         m.image = m.focusedImage
     else
@@ -40,4 +40,4 @@ Function Button_Draw(screen as Object) as Boolean
     end for
     
     return true
-End Function
+end Function
