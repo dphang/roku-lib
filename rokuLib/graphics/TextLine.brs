@@ -1,5 +1,6 @@
 'TextLine represents a single line of text
 '@param text a string representing the text to display
+'@return a TextLine object
 Function TextLine(text as String, font as Object, color as Integer, x as Float, y as Float, align as String) As Object
     this = {
         text: text

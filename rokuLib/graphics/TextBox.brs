@@ -7,6 +7,7 @@
 '@param height the maximum height of this TextBox
 '@param maxLines the maximum number of lines of text that should be displayed
 '@param spacing a float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
+'@param return a TextBox object
 Function TextBox(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float) As Object
     this = {
         text: text
