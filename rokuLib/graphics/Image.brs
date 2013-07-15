@@ -1,5 +1,5 @@
 'Image represents an image in 2D space
-'@param bitmap a roBitmap object or a String specifying an image path
+'@param bitmap a roBitmap/roRegion object or a String specifying an image path
 '@param x the x coordinate
 '@param y the y coordinate
 '@param width the width
@@ -7,7 +7,7 @@
 '@param alpha whether alpha is enabled
 '@return an Image object
 function Image(bitmap, x as Float, y as Float, width = invalid, height = invalid, alpha = false as Boolean) as Object
-    if type(bitmap) = "String" 'If bitmap is a path, initialize a new bitmap
+    if type(bitmap) = "String" 'If bitmap is a path, initialize a new bitmap. Otherwise bitmap should be a roBitmap or roRegion object
         bitmap = CreateObject("roBitmap", bitmap)
     end if
 
@@ -29,7 +29,7 @@ function Image(bitmap, x as Float, y as Float, width = invalid, height = invalid
     return this
 end Function
 
-'Draw this image to the specified screen
+'Draw this Image to the specified screen
 '@param screen a roScreen object
 '@return true if successful
 Function Image_Draw(screen as Object) as Boolean
