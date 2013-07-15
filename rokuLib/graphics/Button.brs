@@ -20,8 +20,6 @@ function Button(text as String, font as Object, rgba as Integer, action as Strin
         Draw: Button_Draw
         SetFocused: Button_SetFocused
     }
-    
-    this.textLine = TextLine(this.text, this.font, this.rgba
 
     return this
 end function

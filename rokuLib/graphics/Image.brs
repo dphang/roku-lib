@@ -1,17 +1,22 @@
 'Image represents an image in 2D space
-'@param bitmap a roBitmap object
+'@param bitmap a roBitmap object or a String specifying an image path
 '@param x the x coordinate
 '@param y the y coordinate
 '@param width the width
 '@param height the height
 '@param alpha whether alpha is enabled
 '@return an Image object
-function Image(bitmap as Object, x as Float, y as Float, width = invalid as Float, height = invalid as Float, alpha = false as Boolean) as Object
+function Image(bitmap, x as Float, y as Float, width = invalid, height = invalid, alpha = false as Boolean) as Object
+    if type(bitmap) = "String" 'If bitmap is a path, initialize a new bitmap
+        bitmap = CreateObject("roBitmap", bitmap)
+    end if
+
     if width = invalid then width = bitmap.GetWidth()
     if height = invalid then height = bitmap.GetHeight()
     
     this = {
         type: "Image"
+        bitmap: bitmap
         x: x
         y: y
         width: width
@@ -28,11 +33,11 @@ end Function
 '@param screen a roScreen object
 '@return true if successful
 Function Image_Draw(screen as Object) as Boolean
-    if m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight() 'Scaled draw
-        scaleX = m.width / bitmap.GetWidth()
-        scaleY = m.height / bitmap.GetHeight()
-        return screen.DrawScaledObject(x, y, scaleX, scaleY, m.bitmap)
+    if m.width <> m.bitmap.GetWidth() or m.height <> m.bitmap.GetHeight() 'Scaled draw
+        scaleX = m.width / m.bitmap.GetWidth()
+        scaleY = m.height / m.bitmap.GetHeight()
+        return screen.DrawScaledObject(m.x, m.y, scaleX, scaleY, m.bitmap)
     else 'Normal draw
-        return screen.DrawObject(x, y, m.bitmap)
+        return screen.DrawObject(m.x, m.y, m.bitmap)
     end if
 End Function
