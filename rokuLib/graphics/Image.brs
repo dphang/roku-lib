@@ -5,6 +5,7 @@
 '@param width the width
 '@param height the height
 '@param alpha whether alpha is enabled
+'@return an Image object
 function Image(bitmap as Object, x as Float, y as Float, width = invalid as Float, height = invalid as Float, alpha = false as Boolean) as Object
     if width = invalid then width = bitmap.GetWidth()
     if height = invalid then height = bitmap.GetHeight()
