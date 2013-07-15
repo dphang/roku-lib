@@ -3,6 +3,7 @@
 '@return a TextLine object
 Function TextLine(text as String, font as Object, color as Integer, x as Float, y as Float, align as String) As Object
     this = {
+        type: "TextLine"
         text: text
         font: font
         color: color

@@ -10,6 +10,7 @@
 '@param return a TextBox object
 Function TextBox(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float) As Object
     this = {
+        type: "TextBox"
         text: text
         x: x
         y: y
