@@ -1,5 +1,11 @@
 'Image represents an image in 2D space
-function Image(bitmap, x as Float, y as Float, width = invalid as Float, height = invalid as Float, alpha = false as Boolean) as Object
+'@param bitmap a roBitmap object
+'@param x the x coordinate
+'@param y the y coordinate
+'@param width the width
+'@param height the height
+'@param alpha whether alpha is enabled
+function Image(bitmap as Object, x as Float, y as Float, width = invalid as Float, height = invalid as Float, alpha = false as Boolean) as Object
     if width = invalid then width = bitmap.GetWidth()
     if height = invalid then height = bitmap.GetHeight()
     
@@ -18,6 +24,8 @@ function Image(bitmap, x as Float, y as Float, width = invalid as Float, height 
 end Function
 
 'Draw this image to the specified screen
+'@param screen a roScreen object
+'@return true if successful
 Function Image_Draw(screen as Object) as Boolean
     if m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight() 'Scaled draw
         scaleX = m.width / bitmap.GetWidth()
