@@ -1,7 +1,7 @@
 rokuLib
 =======
 
-Lightweight library for making Roku development easier.
+Lightweight library for making Roku development easier. Currently incomplete, but hopefully will have most of the library done by the end of July 2013.
 
 ##Installation
 
