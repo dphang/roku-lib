@@ -3,10 +3,12 @@
 '@param action a {@link String} representing the Button's action
 '@return a Button object
 '@see TextBox
-function Button(text as String, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
+function Button(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
     this = {
         type: "Button"
         text: text
+        font: font
+        rgba: rgba
         action: action
         x: x
         y: y
@@ -18,21 +20,23 @@ function Button(text as String, action as String, defaultBitmap as Object, focus
         Draw: Button_Draw
         SetFocused: Button_SetFocused
     }
+    
+    this.textLine = TextLine(this.text, this.font, this.rgba
 
     return this
 end function
 
 'Draws this Button to the specified screen
-'@param screen an roScreen object
-'@return true if successful {@link TextBox}
+'@param screen a roScreen object
+'@return true if successful
 function Button_Draw(screen as Object) as Boolean
     if m.focused
-        m.image = m.focusedImage
+        image = m.focusedImage
     else
-        m.image = m.defaultImage
+        image = m.defaultImage
     end if
     
-    toDraw = [m.image, m.text]
+    toDraw = [image, m.textLine]
     
     for i = 0 to toDraw.Count() - 1
         item = toDraw[i]

@@ -1,16 +1,16 @@
-'Represents a text box with x, y coordinates and should fit within a width and height
-'@param text the text to be shown in the TextBox
+'Represents a text area with x, y coordinates and should fit within a width and height
+'@param text the text to be shown in the TextArea
 '@param font the font to be used
 '@param x the x coordinate
 '@param y the y coordinate
-'@param width the maximum width of this TextBox
-'@param height the maximum height of this TextBox
+'@param width the maximum width of this TextArea
+'@param height the maximum height of this TextArea
 '@param maxLines the maximum number of lines of text that should be displayed
 '@param spacing a float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
-'@param return a TextBox object
-Function TextBox(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float) As Object
+'@param return a TextArea object
+Function TextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float) As Object
     this = {
-        type: "TextBox"
+        type: "TextArea"
         text: text
         x: x
         y: y
@@ -19,25 +19,25 @@ Function TextBox(text as String, font as Object, x as Float, y as Float, width a
         maxLines: maxLines
         spacing: spacing
         
-        draw: TextBox_draw
-        setText: TextBox_setText
+        draw: TextArea_draw
+        setText: TextArea_setText
     }
-    this.initialize() 'Initialize all lines in the textbox
+    this.initialize() 'Initialize all lines in the TextArea
     
     return this
 End Function
 
-'Draw this TextBox object to the specified screen
+'Draw this TextArea object to the specified screen
 '@param screen a roScreen object
-Function TextBox_draw(screen as Object) As Void
+Function TextArea_draw(screen as Object) As Void
     for each line in m.lines
         line.draw(screen)
     end for
 End Function
 
-'Sets the text of this TextBox
-'@param text the text to be shown in the TextBox
-Function TextBox_setText(text as String) As Void
+'Sets the text of this TextArea
+'@param text the text to be shown in the TextArea
+Function TextArea_setText(text as String) As Void
     words = stringToWords(text)
     wordMax = words.Count() - 1
     
