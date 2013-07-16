@@ -3,27 +3,29 @@
 'Converts a string into stars (for passwords)
 '@text the string to be obscured
 '@return an obscured string
-Function obscureString(text as String) as String
+function obscureString(text as String) as String
     temp = ""
-    length = text.Len()
-    for i = 0 to length - 1
+    
+    max = text.Len() - 1
+    for i = 0 to max
         temp = temp + "*"
     end for
+    
     return temp
-End Function
+end function
 
 'Tokenizes a string into an array of words (delimited by spaces and newlines) while fixing duplicate spaces
 '@param text the string to be tokenized
 Function stringToWords(text as String) as Object
     r = CreateObject("roRegex", "(\n|\r|\t| )+", "")
     return r.Split(text)
-End Function
+end function
 
 'Converts time in seconds to an HH:MM string
 '@param time an integer number of seconds
 '@return a string in HH:MM format 
-Function secondsToString(time as Integer) as String
-    minutes = Int(time / 60)
+function secondsToString(time as Integer) as String
+    minutes = tostr(Int(time / 60))
     seconds = time - minutes * 60
     
     temp = ""
@@ -33,6 +35,5 @@ Function secondsToString(time as Integer) as String
 
     temp = temp + tostr(seconds)
     
-    return tostr(minutes) + ":" + temp
-    
-End Function
+    return minutes + ":" + temp
+end function

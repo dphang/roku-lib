@@ -24,10 +24,10 @@ function Button(text as String, font as Object, rgba as Integer, action as Strin
     return this
 end function
 
-'Draws this Button to the specified screen
-'@param screen a roScreen object
+'Draws this Button to the specified component
+'@param screen a roScreen/roBitmap/roRegion component
 '@return true if successful
-function Button_Draw(screen as Object) as Boolean
+function Button_Draw(component as Object) as Boolean
     if m.focused
         image = m.focusedImage
     else
@@ -36,10 +36,13 @@ function Button_Draw(screen as Object) as Boolean
     
     toDraw = [image, m.textLine]
     
-    for i = 0 to toDraw.Count() - 1
+    max = toDraw.Count() - 1
+    for i = 0 to max
         item = toDraw[i]
-        if not item.Draw(screen) then return false
+        if not item.Draw(component)
+            return false
+        end if
     end for
     
     return true
-end Function
+end function

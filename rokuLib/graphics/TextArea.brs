@@ -8,7 +8,7 @@
 '@param maxLines the maximum number of lines of text that should be displayed
 '@param spacing a float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
 '@param return a TextArea object
-Function TextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float, align = "left" as String) As Object
+function TextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float, align = "left" as String) as Object
     this = {
         type: "TextArea" 
         text: text
@@ -19,25 +19,29 @@ Function TextArea(text as String, font as Object, x as Float, y as Float, width 
         maxLines: maxLines
         spacing: spacing
         
-        draw: TextArea_draw
-        setText: TextArea_setText
+        Draw: TextArea_draw
+        SetText: TextArea_setText
     }
     this.initialize() 'Initialize all lines in the TextArea
     
     return this
-End Function
+end function
 
-'Draw this TextArea object to the specified screen
-'@param screen a roScreen object
-Function TextArea_draw(screen as Object) As Void
+'Draw this TextArea object to the specified component
+'@param screen a roScreen/roBitmap/roRegion component
+'@return true if successful
+function TextArea_Draw(component as Object) as Boolean
     for each line in m.lines
-        line.draw(screen)
+        if not line.draw(component)
+            return false
+        end if
     end for
-End Function
+    return true
+end function
 
 'Sets the text of this TextArea
 '@param text the text to be shown in the TextArea
-Function TextArea_setText(text as String) As Void
+function TextArea_SetText(text as String) as Void
     words = stringToWords(text)
     wordMax = words.Count() - 1
     
@@ -76,4 +80,4 @@ Function TextArea_setText(text as String) As Void
     for i = 0 to iMax
         m.lines = TextLine(lines[i], m.font, m.color, m.x, m.y + i * m.spacing * m.font.GetOneLineHeight(), align)
     end for
-End Function
+end function

@@ -4,21 +4,21 @@
 'Returns the ceiling of n, i.e. the smallest integer not less than n
 '@param n a float
 '@return the ceiling of n
-Function ceil(n as Float) As Integer
+function ceil(n as Float) as Integer
     return -int(-n)
-End Function
+end function
 
 'Returns the floor of n, i.e. the largest integer not greater than n
 '@param n a float
 '@return the floor of n
-Function floor(n as Float) As Integer
+function floor(n as Float) as Integer
     return int(n)
-End Function
+end function
 
 'Returns the modulo between two integers
 '@param a an integer
 '@param n an integer
 '@return the value of a mod n
-Function modulo(a as Integer, n as Integer) as Integer
+function modulo(a as Integer, n as Integer) as Integer
     return a - (n * int(a / n))
-End Function
+end function

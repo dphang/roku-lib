@@ -1,7 +1,7 @@
 'TextLine represents a single line of text without alignment.
 '@param text a string representing the text to display
 '@return a TextLine object
-Function TextLine(text as String, font as Object, rgba as Integer, x as Float, y as Float, align as String) As Object
+function TextLine(text as String, font as Object, rgba as Integer, x as Float, y as Float, align as String) as Object
     this = {
         type: "TextLine"
         text: text
@@ -10,14 +10,14 @@ Function TextLine(text as String, font as Object, rgba as Integer, x as Float, y
         x: x
         y: y
         
-        draw: TextLine_draw
+        Draw: TextLine_Draw
     }
     return this
-End Function
+end function
 
-'Draw this TextLine to a screen, with the top-left corner of the text corresponding to the x and y coordinates of this object
-'@param screen a roScreen object
+'Draw this TextLine to a component, with the top-left corner of the text corresponding to the x and y coordinates of this object
+'@param screen a roScreen/roBitmap/roRegion component
 '@return true if successful
-Function TextLine_draw(screen as Object) As Boolean
-    return screen.DrawText(m.text, m.x, m.y, m.rgba, m.font)
-End Function
+function TextLine_Draw(component as Object) as Boolean
+    return component.DrawText(m.text, m.x, m.y, m.rgba, m.font)
+end function

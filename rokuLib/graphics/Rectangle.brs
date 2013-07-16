@@ -5,7 +5,7 @@
 '@param height
 '@param rgba a 32-bit value in the form &hXXXXXXXX specifying the rgb color and alpha
 '@return the Rectangle object
-Function Rectangle(x as Float, y as Float, width as Float, height as Float, rgba as Integer) as Object
+function Rectangle(x as Float, y as Float, width as Float, height as Float, rgba as Integer) as Object
     this = {
         type: "Rectangle"
         x: x
@@ -18,11 +18,11 @@ Function Rectangle(x as Float, y as Float, width as Float, height as Float, rgba
     }
     
     return this
-End Function
+end function
 
-'Draws this Rectangle to the specified screen
-'@param screen a roScreen object
+'Draws this Rectangle to the specified component
+'@param component a roScreen/roBitmap/roRegion component
 '@return true if successful
-Function Rectangle_Draw(screen) As Boolean
-    return screen.DrawRect(m.x, m.y, m.width, m.height, m.rgba)
-End Function
+function Rectangle_Draw(component as Object) as Boolean
+    return component.DrawRect(m.x, m.y, m.width, m.height, m.rgba)
+end function

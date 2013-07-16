@@ -6,7 +6,7 @@
 '@param height the height
 '@param alpha whether alpha is enabled
 '@return an Image object
-function Image(bitmap, x as Float, y as Float, width = invalid, height = invalid, alpha = false as Boolean) as Object
+function Image(bitmap as Dynamic, x as Float, y as Float, width = invalid, height = invalid, alpha = false as Boolean) as Object
     if type(bitmap) = "String" 'If bitmap is a path, initialize a new bitmap. Otherwise bitmap should be a roBitmap or roRegion object
         bitmap = CreateObject("roBitmap", bitmap)
     end if
@@ -27,17 +27,17 @@ function Image(bitmap, x as Float, y as Float, width = invalid, height = invalid
     }
     
     return this
-end Function
+end function
 
-'Draw this Image to the specified screen
-'@param screen a roScreen object
+'Draw this Image to the specified component
+'@param component a roScreen/roBitmap/roRegion component
 '@return true if successful
-Function Image_Draw(screen as Object) as Boolean
+function Image_Draw(component as Object) as Boolean
     if m.width <> m.bitmap.GetWidth() or m.height <> m.bitmap.GetHeight() 'Scaled draw
         scaleX = m.width / m.bitmap.GetWidth()
         scaleY = m.height / m.bitmap.GetHeight()
-        return screen.DrawScaledObject(m.x, m.y, scaleX, scaleY, m.bitmap)
+        return component.DrawScaledObject(m.x, m.y, scaleX, scaleY, m.bitmap)
     else 'Normal draw
-        return screen.DrawObject(m.x, m.y, m.bitmap)
+        return component.DrawObject(m.x, m.y, m.bitmap)
     end if
-End Function
+end function
