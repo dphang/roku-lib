@@ -26,8 +26,9 @@ Function secondsToString(time as Integer) as String
     minutes = Int(time / 60)
     seconds = time - minutes * 60
     
+    temp = ""
     if seconds < 10
-        temp = "0" + tostr(seconds)
+        temp = temp + "0"
     end if
 
     temp = temp + tostr(seconds)

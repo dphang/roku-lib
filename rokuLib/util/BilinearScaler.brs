@@ -1,1 +1,0 @@
-'Fast bilinear image scaler
