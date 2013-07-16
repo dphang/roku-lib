@@ -8,9 +8,9 @@
 '@param maxLines the maximum number of lines of text that should be displayed
 '@param spacing a float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
 '@param return a TextArea object
-Function TextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float) As Object
+Function TextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float, align = "left" as String) As Object
     this = {
-        type: "TextArea"
+        type: "TextArea" 
         text: text
         x: x
         y: y
