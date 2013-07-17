@@ -1,11 +1,11 @@
-'rlImage represents an image in 2D space. Lazy allocation of bitmap to reduce memory use (only allocated when first drawn)
+'RlImage represents an image in 2D space. Lazy allocation of bitmap to reduce memory use (only allocated when first drawn)
 '@param path a roBitmap/roRegion object or a String specifying an image path
 '@param x the x coordinate
 '@param y the y coordinate
 '@param width the width
 '@param height the height
 '@return an Image object
-function rlImage(path as Dynamic, x as Float, y as Float, width = invalid, height = invalid) as Object
+function RlImage(path as Dynamic, x as Float, y as Float, width = invalid, height = invalid) as Object
     if type(path) = "String" 'If bitmap is a path, initialize a new bitmap. Otherwise bitmap should be a roBitmap or roRegion object
         bitmap = invalid
     else if type(path) = "roBitmap"
@@ -14,7 +14,7 @@ function rlImage(path as Dynamic, x as Float, y as Float, width = invalid, heigh
     end if
     
     this = {
-        type: "rlImage"
+        type: "RlImage"
         bitmap: bitmap
         path: path
         x: x
@@ -22,18 +22,18 @@ function rlImage(path as Dynamic, x as Float, y as Float, width = invalid, heigh
         width: width
         height: height
         
-        Draw: rlImage_Draw
-        Deallocate: rlImage_Deallocate
+        Draw: RlImage_Draw
+        Deallocate: RlImage_Deallocate
     }
     
     return this
 end function
 
-'Draw this rlImage to the specified component.
+'Draw this RlImage to the specified component.
 '@param component a roScreen/roBitmap/roRegion component
 '@param conservative if set to true, the associated roBitmap is immediately deallocated after drawing, if possible
 '@return true if successful
-function rlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
+function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
     'Lazy allocation
     if m.bitmap = invalid
         m.bitmap = CreateObject("roBitmap", m.path)
@@ -61,6 +61,6 @@ function rlImage_Draw(component as Object, conservative = false as Boolean) as B
 end function
 
 'Deletes the reference to the associated roBitmap (may deallocate from memory depending on whether there are other references to that bitmap)
-function rlImage_Deallocate() as Void
+function RlImage_Deallocate() as Void
     m.bitmap = invalid
 end function

@@ -1,16 +1,16 @@
 'Represents a text area with x, y coordinates and should fit within a width and height
-'@param text the text to be shown in the rlTextArea
+'@param text the text to be shown in the RlTextArea
 '@param font the font to be used
 '@param x the x coordinate
 '@param y the y coordinate
-'@param width the maximum width of this rlTextArea
-'@param height the maximum height of this rlTextArea
+'@param width the maximum width of this RlTextArea
+'@param height the maximum height of this RlTextArea
 '@param maxLines the maximum number of lines of text that should be displayed
 '@param spacing a float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
-'@param return a rlTextArea object
-function rlTextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float, align = "left" as String) as Object
+'@param return an RlTextArea object
+function RlTextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float, align = "left" as String) as Object
     this = {
-        type: "rlTextArea" 
+        type: "RlTextArea" 
         text: text
         x: x
         y: y
@@ -22,12 +22,12 @@ function rlTextArea(text as String, font as Object, x as Float, y as Float, widt
         Draw: TextArea_draw
         SetText: TextArea_setText
     }
-    this.initialize() 'Initialize all lines in the rlTextArea
+    this.initialize() 'Initialize all lines in the RlTextArea
     
     return this
 end function
 
-'Draw this rlTextArea object to the specified component
+'Draw this RlTextArea object to the specified component
 '@param screen a roScreen/roBitmap/roRegion component
 '@return true if successful
 function TextArea_Draw(component as Object) as Boolean
@@ -39,8 +39,8 @@ function TextArea_Draw(component as Object) as Boolean
     return true
 end function
 
-'Sets the text of this rlTextArea
-'@param text the text to be shown in the rlTextArea
+'Sets the text of this RlTextArea
+'@param text the text to be shown in the RlTextArea
 function TextArea_SetText(text as String) as Void
     words = stringToWords(text)
     wordMax = words.Count() - 1

@@ -1,33 +1,32 @@
-'Button represents a selectable button with text
+'RlButton represents a selectable button with text
 '@param text the text to be displayed on the button
-'@param action a {@link String} representing the Button's action
-'@return a Button object
+'@param action a {@link String} representing the RlButton's action
+'@return an RlButton object
 '@see TextBox
-function rlButton(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
+function RlButton(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
     this = {
-        type: "rlButton"
+        type: "RlButton"
         text: text
         font: font
         rgba: rgba
         action: action
         x: x
         y: y
-        defaultImage: rlImage(defaultBitmap, x, y)
-        focusedImage: rlImage(focusedBitmap, x, y)
+        defaultImage: RlImage(defaultBitmap, x, y)
+        focusedImage: RlImage(focusedBitmap, x, y)
         
         focused: false
         
-        Draw: Button_Draw
-        SetFocused: Button_SetFocused
+        Draw: RlButton_Draw
     }
 
     return this
 end function
 
-'Draws this Button to the specified component
+'Draws this RlButton to the specified component
 '@param screen a roScreen/roBitmap/roRegion component
 '@return true if successful
-function Button_Draw(component as Object) as Boolean
+function RlButton_Draw(component as Object) as Boolean
     if m.focused
         image = m.focusedImage
     else
