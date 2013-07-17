@@ -3,17 +3,17 @@
 '@param action a {@link String} representing the Button's action
 '@return a Button object
 '@see TextBox
-function Button(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
+function rlButton(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
     this = {
-        type: "Button"
+        type: "rlButton"
         text: text
         font: font
         rgba: rgba
         action: action
         x: x
         y: y
-        defaultImage: Image(defaultBitmap, x, y)
-        focusedImage: Image(focusedBitmap, x, y)
+        defaultImage: rlImage(defaultBitmap, x, y)
+        focusedImage: rlImage(focusedBitmap, x, y)
         
         focused: false
         

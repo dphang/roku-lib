@@ -16,7 +16,7 @@ end function
 
 'Tokenizes a string into an array of words (delimited by spaces and newlines) while fixing duplicate spaces
 '@param text the string to be tokenized
-Function stringToWords(text as String) as Object
+Function stringToWords(text as String) as Object 
     r = CreateObject("roRegex", "(\n|\r|\t| )+", "")
     return r.Split(text)
 end function
@@ -25,7 +25,7 @@ end function
 '@param time an integer number of seconds
 '@return a string in HH:MM format 
 function secondsToString(time as Integer) as String
-    minutes = tostr(Int(time / 60))
+    minutes = Int(time / 60)
     seconds = time - minutes * 60
     
     temp = ""
@@ -35,5 +35,5 @@ function secondsToString(time as Integer) as String
 
     temp = temp + tostr(seconds)
     
-    return minutes + ":" + temp
+    return tostr(minutes) + ":" + temp
 end function
