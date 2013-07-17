@@ -36,7 +36,7 @@ end function
 function rlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
     'Lazy allocation
     if m.bitmap = invalid
-        m.bitmap = CreateObject("roBitmap", path)
+        m.bitmap = CreateObject("roBitmap", m.path)
     end if
     
     if m.width = invalid then m.width = m.bitmap.GetWidth()
