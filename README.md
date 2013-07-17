@@ -11,4 +11,4 @@ Using ``rokuLib`` with Eclipse is recommended since Javadocs is partially suppor
 
 ##Utilities
 
-There are math and string utilities that aren't native to the Roku SDK. In addition, I plan to include an image scaler for dealing with PNG files.
+There are math and string utilities that aren't native to the Roku SDK.
