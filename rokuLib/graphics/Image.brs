@@ -1,4 +1,4 @@
-'Image represents an image in 2D space
+'rlImage represents an image in 2D space
 '@param bitmap a roBitmap/roRegion object or a String specifying an image path
 '@param x the x coordinate
 '@param y the y coordinate
@@ -6,7 +6,7 @@
 '@param height the height
 '@param alpha whether alpha is enabled
 '@return an Image object
-function Image(bitmap as Dynamic, x as Float, y as Float, width = invalid, height = invalid, alpha = false as Boolean) as Object
+function rlImage(bitmap as Dynamic, x as Float, y as Float, width = invalid, height = invalid, alpha = false as Boolean) as Object
     if type(bitmap) = "String" 'If bitmap is a path, initialize a new bitmap. Otherwise bitmap should be a roBitmap or roRegion object
         bitmap = CreateObject("roBitmap", bitmap)
     end if
@@ -23,7 +23,7 @@ function Image(bitmap as Dynamic, x as Float, y as Float, width = invalid, heigh
         height: height
         alpha: alpha
         
-        Draw: Image_Draw
+        Draw: rlImage_Draw
     }
     
     return this
@@ -32,7 +32,7 @@ end function
 'Draw this Image to the specified component
 '@param component a roScreen/roBitmap/roRegion component
 '@return true if successful
-function Image_Draw(component as Object) as Boolean
+function rlImage_Draw(component as Object) as Boolean
     if m.width <> m.bitmap.GetWidth() or m.height <> m.bitmap.GetHeight() 'Scaled draw
         scaleX = m.width / m.bitmap.GetWidth()
         scaleY = m.height / m.bitmap.GetHeight()
