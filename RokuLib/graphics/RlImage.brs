@@ -1,11 +1,11 @@
-'RlImage represents an image in 2D space. Lazy allocation of bitmap to reduce memory use (only allocated when first drawn)
+'RlImage represents an image in 2D space. Lazy allocation of bitmap to reduce memory use (only allocated when first drawn).
 '@param path a roBitmap/roRegion object or a String specifying an image path
 '@param x the x coordinate
 '@param y the y coordinate
 '@param width the width
 '@param height the height
 '@return an Image object
-function RlImage(path as Dynamic, x as Float, y as Float, width = invalid, height = invalid) as Object
+function RlImage(path as Dynamic, x as Integer, y as Integer, width = invalid as Dynamic, height = invalid as Dynamic) as Object
     if type(path) = "String" 'If bitmap is a path, initialize a new bitmap. Otherwise bitmap should be a roBitmap or roRegion object
         bitmap = invalid
     else if type(path) = "roBitmap"

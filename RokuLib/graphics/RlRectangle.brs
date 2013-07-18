@@ -5,7 +5,7 @@
 '@param height
 '@param rgba a 32-bit value in the form &hXXXXXXXX specifying the rgb color and alpha
 '@return an RlRectangle object
-function RlRectangle(x as Float, y as Float, width as Float, height as Float, rgba as Integer) as Object
+function RlRectangle(x as Integer, y as Integer, width as Integer, height as Integer, rgba as Integer) as Object
     this = {
         type: "RlRectangle"
         x: x

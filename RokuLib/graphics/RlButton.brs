@@ -3,7 +3,7 @@
 '@param action a {@link String} representing the RlButton's action
 '@return an RlButton object
 '@see TextBox
-function RlButton(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Float, y as Float) as Object
+function RlButton(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer) as Object
     this = {
         type: "RlButton"
         text: text

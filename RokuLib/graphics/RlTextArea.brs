@@ -6,9 +6,9 @@
 '@param width the maximum width of this RlTextArea
 '@param height the maximum height of this RlTextArea
 '@param maxLines the maximum number of lines of text that should be displayed
-'@param spacing a float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
+'@param spacing a Float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
 '@param return an RlTextArea object
-function RlTextArea(text as String, font as Object, x as Float, y as Float, width as Float, height as Float, maxLines as Integer, spacing as Float, align = "left" as String) as Object
+function RlTextArea(text as String, font as Object, x as Integer, y as Integer, width as Integer, height as Integer, maxLines as Integer, spacing as Float, align = "left" as String) as Object
     this = {
         type: "RlTextArea" 
         text: text
