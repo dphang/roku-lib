@@ -3,10 +3,9 @@
 '@param action a {@link String} representing the RlButton's action
 '@return an RlButton object
 '@see TextBox
-function RlButton(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer) as Object
+function RlButton(text = invalid as Dynamic, font = invalid as Dynamic, rgba = invalid as Dynamic, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer) as Object
     this = {
         type: "RlButton"
-        text: text
         font: font
         rgba: rgba
         action: action
@@ -33,15 +32,11 @@ function RlButton_Draw(component as Object) as Boolean
         image = m.defaultImage
     end if
     
-    toDraw = [image, m.textLine]
+    image.Draw()
     
-    max = toDraw.Count() - 1
-    for i = 0 to max
-        item = toDraw[i]
-        if not item.Draw(component)
-            return false
-        end if
-    end for
+    if this.textLine = invalid and text <> invalid and font <> invalid
+        this.textLine = RlTextLine(m.text, m.font, m.rgba, m.x + image.width / 2 - GetWidth(), m.y)
+    end if
     
     return true
 end function

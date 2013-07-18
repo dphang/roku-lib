@@ -22,7 +22,6 @@ end function
 
 'Draws this RlRectangle to the specified component
 '@param component a roScreen/roBitmap/roRegion component
-'@return true if successful
-function RlRectangle_Draw(component as Object) as Boolean
-    return component.DrawRect(m.x, m.y, m.width, m.height, m.rgba)
+function RlRectangle_Draw(component as Object) as Void
+    component.DrawRect(m.x, m.y, m.width, m.height, m.rgba)
 end function

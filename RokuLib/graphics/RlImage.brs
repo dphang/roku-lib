@@ -56,7 +56,6 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         m.Deallocate()
     end if
     
-    component.Finish()
     return success
 end function
 

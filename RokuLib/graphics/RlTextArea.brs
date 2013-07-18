@@ -8,10 +8,12 @@
 '@param maxLines the maximum number of lines of text that should be displayed
 '@param spacing a Float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
 '@param return an RlTextArea object
-function RlTextArea(text as String, font as Object, x as Integer, y as Integer, width as Integer, height as Integer, maxLines as Integer, spacing as Float, align = "left" as String) as Object
+function RlTextArea(text as String, font as Object, rgba as Integer, x as Integer, y as Integer, width as Integer, height as Integer, maxLines as Integer, spacing as Float, align = "left" as String) as Object
     this = {
         type: "RlTextArea" 
         text: text
+        font: font
+        rgba: rgba
         x: x
         y: y
         width: width
@@ -78,6 +80,6 @@ function TextArea_SetText(text as String) as Void
     iMax = lines.Count() - 1
     
     for i = 0 to iMax
-        m.lines = TextLine(lines[i], m.font, m.color, m.x, m.y + i * m.spacing * m.font.GetOneLineHeight(), align)
+        m.lines = TextLine(lines[i], m.font, m.rgba, m.x, m.y + i * m.spacing * m.font.GetOneLineHeight(), align)
     end for
 end function

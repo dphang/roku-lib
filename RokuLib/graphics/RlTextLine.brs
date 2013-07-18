@@ -1,7 +1,7 @@
 'RlTextLine represents a single line of text without alignment.
 '@param text a string representing the text to display
 '@return a RlTextLine object
-function RlTextLine(text as String, font as Object, rgba as Integer, x as Float, y as Float, align as String) as Object
+function RlTextLine(text as String, font as Object, rgba as Integer, x as Float, y as Float) as Object
     this = {
         type: "RlTextLine"
         text: text
