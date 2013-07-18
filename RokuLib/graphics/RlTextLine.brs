@@ -16,7 +16,7 @@ function RlTextLine(text as String, font as Object, rgba as Integer, x as Float,
 end function
 
 'Draw this RlTextLine to a component, with the top-left corner of the text corresponding to the x and y coordinates of this object
-'@param screen a roScreen/roBitmap/roRegion component
+'@param screen a roScreen/roBitmap/roRegion object
 '@return true if successful
 function RlTextLine_Draw(component as Object) as Boolean
     return component.DrawText(m.text, m.x, m.y, m.rgba, m.font)

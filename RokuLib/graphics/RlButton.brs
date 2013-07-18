@@ -1,11 +1,11 @@
 'RlButton represents a selectable button with text
 '@param text the text to be displayed on the button
-'@param action a {@link String} representing the RlButton's action
+'@param action a String representing the RlButton's action
 '@return an RlButton object
-'@see TextBox
-function RlButton(text = invalid as Dynamic, font = invalid as Dynamic, rgba = invalid as Dynamic, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer) as Object
+function RlButton(text as Dynamic, font as Dynamic, rgba as Dynamic, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer) as Object
     this = {
         type: "RlButton"
+        text: text
         font: font
         rgba: rgba
         action: action
@@ -23,7 +23,7 @@ function RlButton(text = invalid as Dynamic, font = invalid as Dynamic, rgba = i
 end function
 
 'Draws this RlButton to the specified component
-'@param screen a roScreen/roBitmap/roRegion component
+'@param component a roScreen/roBitmap/roRegion object
 '@return true if successful
 function RlButton_Draw(component as Object) as Boolean
     if m.focused
@@ -32,11 +32,13 @@ function RlButton_Draw(component as Object) as Boolean
         image = m.defaultImage
     end if
     
-    image.Draw()
+    if not image.Draw(component) then return false
     
-    if this.textLine = invalid and text <> invalid and font <> invalid
-        this.textLine = RlTextLine(m.text, m.font, m.rgba, m.x + image.width / 2 - GetWidth(), m.y)
+    if m.textLine = invalid and text <> invalid and font <> invalid
+        m.textLine = RlTextLine(m.text, m.font, m.rgba, m.x + (image.width - m.font.GetOneLineWidth(m.text, 1000)) / 2, m.y)
     end if
+    
+    if not m.textLine.Draw(component) then return false
     
     return true
 end function

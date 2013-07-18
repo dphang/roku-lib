@@ -30,7 +30,7 @@ function RlImage(path as Dynamic, x as Integer, y as Integer, width = invalid as
 end function
 
 'Draw this RlImage to the specified component.
-'@param component a roScreen/roBitmap/roRegion component
+'@param component a roScreen/roBitmap/roRegion object
 '@param conservative if set to true, the associated roBitmap is immediately deallocated after drawing, if possible
 '@return true if successful
 function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean

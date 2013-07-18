@@ -30,7 +30,7 @@ function RlTextArea(text as String, font as Object, rgba as Integer, x as Intege
 end function
 
 'Draw this RlTextArea object to the specified component
-'@param screen a roScreen/roBitmap/roRegion component
+'@param screen a roScreen/roBitmap/roRegion object
 '@return true if successful
 function TextArea_Draw(component as Object) as Boolean
     for each line in m.lines

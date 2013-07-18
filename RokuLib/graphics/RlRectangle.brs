@@ -21,7 +21,7 @@ function RlRectangle(x as Integer, y as Integer, width as Integer, height as Int
 end function
 
 'Draws this RlRectangle to the specified component
-'@param component a roScreen/roBitmap/roRegion component
+'@param component a roScreen/roBitmap/roRegion object
 function RlRectangle_Draw(component as Object) as Void
     component.DrawRect(m.x, m.y, m.width, m.height, m.rgba)
 end function

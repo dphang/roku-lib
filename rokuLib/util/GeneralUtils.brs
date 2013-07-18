@@ -656,12 +656,3 @@ Function validateParam(param As Object, paramType As String, functionName As Str
     print "invalid parameter of type "; type(param); " for "; paramType; " in function "; functionName
     return false
 End Function
-
-'Get font original width / original height
-Function getFontWidth(font, text) As Float
-    return font.GetOneLineWidth(text, 9999) / m.mult
-End Function
-
-Function getFontHeight(font)
-    return font.GetOneLineHeight() / m.mult
-End Function
