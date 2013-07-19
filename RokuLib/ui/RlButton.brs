@@ -1,6 +1,6 @@
 'RlButton represents a selectable button with text centered on it
 '@param text the text to be displayed on the button
-'@param action a String representing the RlButton's action
+'@param action the String representing the RlButton's action
 '@return an RlButton object
 function RlButton(text as Dynamic, font as Dynamic, rgba as Dynamic, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer) as Object
     this = {

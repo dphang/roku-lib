@@ -1,6 +1,6 @@
 'Represents a focusable Text object (i.e. different color when focused)
-'@param text a String
-'@param font a roFont object
+'@param text the String to be displayed
+'@param font the roFont object to be used
 '@param rgba1 the default color
 '@param rgba1 the focused color
 '@return a RlFocusableText object
