@@ -25,9 +25,14 @@ end function
 'Adds a new UI element to the end of this RlVerticalList
 '@param element the element to be added
 function RlVerticalList_Push(element as Object) as Void
-    m.elements.Push(element)
+    count = m.elements.Count()
+    if count <> 0
+        element.y = m.y + (m.offset + m.elements.Peek().height) * count
+    else
+        element.y = m.y
+    end if    
     element.x = m.x
-    element.y = m.y + (m.offset + m.elements.Peek().height) * (m.elements.Count() - 1)
+    m.elements.Push(element)
 end function
 
 'Pops the UI element at the end of this RlVerticalList

@@ -5,7 +5,7 @@
 '@param width the width if known. Otherwise, the width will only be initialized when the bitmap is first allocated
 '@param height the height if known. Otherwise, the height will only be initialized when the bitmap is first allocated
 '@return an Image object
-function RlImage(path as Dynamic, x as Integer, y as Integer, width = invalid as Dynamic, height = invalid as Dynamic) as Object
+function RlImage(path as Dynamic, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic) as Object
     if type(path) = "String" 'If bitmap is a path, initialize a new bitmap. Otherwise bitmap should be a roBitmap or roRegion object
         bitmap = invalid
     else if type(path) = "roBitmap"

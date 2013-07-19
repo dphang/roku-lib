@@ -25,9 +25,14 @@ end function
 'Adds a new UI element to the end of this RlHorizontalList
 '@param element the element to be added
 function RlHorizontalList_Push(element as Object) as Void
-    m.elements.Push(element)
-    element.x = m.x + (m.offset + m.elements.Peek().width) * (m.elements.Count() - 1)
+    count = m.elements.Count()
+    if count <> 0
+        element.x = m.x + (m.offset + m.elements.Peek().width) * count
+    else
+        element.x = m.x
+    end if    
     element.y = m.y
+    m.elements.Push(element)
 end function
 
 'Pops the UI element at the end of this RlHorizontalList
