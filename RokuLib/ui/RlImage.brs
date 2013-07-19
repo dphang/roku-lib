@@ -48,8 +48,6 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         scaleY = m.height / m.bitmap.GetHeight()
         success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, m.bitmap)
     else 'Normal draw
-        print "x: " + tostr(m.x)
-        print "y: " + tostr(m.y)
         success = component.DrawObject(m.x, m.y, m.bitmap)
     end if
     

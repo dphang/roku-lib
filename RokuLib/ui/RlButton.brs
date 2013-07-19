@@ -11,7 +11,7 @@ function RlButton(text as Dynamic, font as Dynamic, rgba as Dynamic, action as S
         action: action
         x: x
         y: y
-        image: RlFocusable(defaultBitmap, focusedBitmap, x, y, width, height)
+        image: RlFocusableImage(defaultBitmap, focusedBitmap, x, y, width, height)
         
         focused: false
         
