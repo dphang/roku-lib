@@ -22,6 +22,7 @@ end function
 
 'Draws this RlRectangle to the specified component
 '@param component a roScreen/roBitmap/roRegion object
-function RlRectangle_Draw(component as Object) as Void
+function RlRectangle_Draw(component as Object) as Boolean
     component.DrawRect(m.x, m.y, m.width, m.height, m.rgba)
+    return true 'Bug in BrightScript, DrawRect always returns uninitialized
 end function
