@@ -7,7 +7,8 @@
 function RlDrawAll(array as Object, component as Object) as Boolean
     max = array.Count() - 1
     for i = 0 to max
-        if not array[i].Draw(component) then return false
+        item = array[i]
+        if item <> invalid and not item.Draw(component) then return false
     end for
     return true
 end function

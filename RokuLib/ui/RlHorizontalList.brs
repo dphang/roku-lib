@@ -1,0 +1,1 @@
+'Represents a horizontal list of UI elements.

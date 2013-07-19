@@ -1,5 +1,5 @@
-'Represents a focusable (whether by selection, or just highlighted) element
-function RlFocusable(defaultBitmap as Dynamic, focusedBitmap as Dynamic, x as Integer, y as Integer, width = invalid as Dynamic, height = invalid as Dynamic) as Object
+'Represents a focusable (whether by selection, or just highlighted) image
+function RlFocusableImage(defaultBitmap as Dynamic, focusedBitmap as Dynamic, x as Integer, y as Integer, width = invalid as Dynamic, height = invalid as Dynamic) as Object
     this = {
         defaultImage: RlImage(defaultBitmap, x, y, width, height)
         focusedImage: RlImage(focusedBitmap, x, y, width, height)
