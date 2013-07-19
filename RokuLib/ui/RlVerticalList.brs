@@ -26,7 +26,6 @@ end function
 '@param element the element to be added
 function RlVerticalList_Push(element as Object) as Void
     m.elements.Push(element)
-    
     element.x = m.x
     element.y = m.y + (m.offset + m.elements.Peek().height) * (m.elements.Count() - 1)
 end function

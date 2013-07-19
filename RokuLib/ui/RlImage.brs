@@ -2,8 +2,8 @@
 '@param path a roBitmap/roRegion object or a String specifying an image path
 '@param x the x coordinate
 '@param y the y coordinate
-'@param width the width
-'@param height the height
+'@param width the width if known. Otherwise, the width will only be initialized when the bitmap is first allocated
+'@param height the height if known. Otherwise, the height will only be initialized when the bitmap is first allocated
 '@return an Image object
 function RlImage(path as Dynamic, x as Integer, y as Integer, width = invalid as Dynamic, height = invalid as Dynamic) as Object
     if type(path) = "String" 'If bitmap is a path, initialize a new bitmap. Otherwise bitmap should be a roBitmap or roRegion object
