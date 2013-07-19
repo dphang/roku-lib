@@ -29,7 +29,7 @@ function RlImage(path as Dynamic, x as Integer, y as Integer, width = invalid as
     return this
 end function
 
-'Draw this RlImage to the specified component.
+'Draws this RlImage to the specified component.
 '@param component a roScreen/roBitmap/roRegion object
 '@param conservative if set to true, the associated roBitmap is immediately deallocated after drawing, if possible
 '@return true if successful
@@ -39,8 +39,8 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         m.bitmap = CreateObject("roBitmap", m.path)
     end if
     
-    if m.width = invalid then m.width = m.bitmap.GetWidth()
-    if m.height = invalid then m.height = m.bitmap.GetHeight()
+    m.width = m.bitmap.GetWidth()
+    m.height = m.bitmap.GetHeight()
 
     'Draw image
     if m.width <> m.bitmap.GetWidth() or m.height <> m.bitmap.GetHeight() 'Scaled draw
@@ -48,6 +48,8 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         scaleY = m.height / m.bitmap.GetHeight()
         success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, m.bitmap)
     else 'Normal draw
+        print "x: " + tostr(m.x)
+        print "y: " + tostr(m.y)
         success = component.DrawObject(m.x, m.y, m.bitmap)
     end if
     

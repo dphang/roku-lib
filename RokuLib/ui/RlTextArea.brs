@@ -1,6 +1,6 @@
 'Represents a text area with x, y coordinates and should fit within a width and height
-'@param text the text to be shown in the RlTextArea
-'@param font the font to be used
+'@param text the String to be displayed
+'@param font a roFont object
 '@param x the x coordinate
 '@param y the y coordinate
 '@param width the maximum width of this RlTextArea
@@ -29,7 +29,7 @@ function RlTextArea(text as String, font as Object, rgba as Integer, x as Intege
     return this
 end function
 
-'Draw this RlTextArea object to the specified component
+'Draws this RlTextArea object to the specified component
 '@param screen a roScreen/roBitmap/roRegion object
 '@return true if successful
 function TextArea_Draw(component as Object) as Boolean
