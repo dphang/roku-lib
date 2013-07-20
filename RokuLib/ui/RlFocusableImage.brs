@@ -1,11 +1,11 @@
 'Represents a focusable (whether by selection, or just highlighted) image object
-'@param defaultBitmap the String or roBitmap to be displayed when not focused
-'@param focusedBitmap the String or roBitmap to be displayed when focused
+'@param defaultBitmap the path to the default bitmap
+'@param focusedBitmap the path to the focused bitmap
 '@param x the x coordinate
 '@param y the y coordinate
 '@param width the width if known. Otherwise, the width will only be iniialized when the bitmap is first allocated.
 '@param height the height if known. Otherwise, the height will only be iniialized when the bitmap is first allocated.
-function RlFocusableImage(defaultBitmap as Dynamic, focusedBitmap as Dynamic, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic) as Object
+function RlFocusableImage(defaultBitmap as String, focusedBitmap as String, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic) as Object
     this = {
         defaultImage: RlImage(defaultBitmap, x, y, width, height)
         focusedImage: RlImage(focusedBitmap, x, y, width, height)

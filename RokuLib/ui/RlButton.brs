@@ -2,7 +2,7 @@
 '@param text the text to be displayed on the button
 '@param action the String representing the RlButton's action
 '@return an RlButton object
-function RlButton(text as Dynamic, font as Dynamic, rgba as Dynamic, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer) as Object
+function RlButton(text as Dynamic, font as Dynamic, rgba as Dynamic, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer, width as Integer, height as Integer) as Object
     this = {
         type: "RlButton"
         text: text
