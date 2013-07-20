@@ -52,7 +52,7 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
     return success
 end function
 
-'Deletes the reference to the associated roBitmap (may deallocate from memory depending on whether there are other references to that bitmap)
+'Deletes the reference to the associated roBitmap (may also deallocate other images referencing the same bitmap)
 function RlImage_Deallocate() as Void
-    m.bitmap = invalid
+    m.bitmapManager.ClearBitmap(m.path)
 end function
