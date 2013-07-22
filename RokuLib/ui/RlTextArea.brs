@@ -22,8 +22,8 @@ function RlTextArea(text as String, font as Object, rgba as Integer, x as Intege
         maxLines: maxLines
         spacing: spacing
         
-        Draw: TextArea_draw
-        Init: TextArea_setText
+        Draw: TextArea_Draw
+        Init: TextArea_Init
     }
     
     this.Init() 'Initialize all lines in the RlTextArea
