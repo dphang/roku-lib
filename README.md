@@ -1,7 +1,7 @@
 rokuLib
 =======
 
-Lightweight library for making Roku development easier. Currently incomplete, but hopefully will have most of the library done by the end of July 2013.
+Lightweight library for making Roku UI development easier. Currently incomplete, but hopefully will have most of the library done by the end of July 2013. Right now this supports loading images, buttons, horizontal/vertical groups, etc.
 
 ##Installation
 
@@ -11,4 +11,4 @@ Using ``rokuLib`` with Eclipse is recommended since Javadocs is partially suppor
 
 ##Utilities
 
-There are math and string utilities that aren't native to the Roku SDK.
+There are also several math and string utilities that aren't native to the Roku SDK.
