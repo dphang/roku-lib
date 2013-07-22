@@ -1,4 +1,4 @@
-'Represents a text area with x, y coordinates and should fit within a width and height
+'Represents a text area with x, y coordinates and should fit within a width and height. Optional alignment.
 '@param text the String to be displayed
 '@param font a roFont object
 '@param x the x coordinate
@@ -7,8 +7,9 @@
 '@param height the maximum height of this RlTextArea
 '@param maxLines the maximum number of lines of text that should be displayed
 '@param spacing a Float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
+'@param align a String specifing how text should be aligned. Choices are: left, center, right
 '@param return an RlTextArea object
-function RlTextArea(text as String, font as Object, rgba as Integer, x as Integer, y as Integer, width as Integer, height as Integer, maxLines as Integer, spacing as Float, align = "left" as String) as Object
+function RlTextArea(text as String, font as Object, rgba as Integer, x as Integer, y as Integer, width = 2000 as Integer, height = 2000 as Integer, maxLines = 100 as Integer, spacing = 1.0 as Float, align = "left" as String) as Object
     this = {
         type: "RlTextArea" 
         text: text
@@ -22,9 +23,10 @@ function RlTextArea(text as String, font as Object, rgba as Integer, x as Intege
         spacing: spacing
         
         Draw: TextArea_draw
-        SetText: TextArea_setText
+        Init: TextArea_setText
     }
-    this.initialize() 'Initialize all lines in the RlTextArea
+    
+    this.Init() 'Initialize all lines in the RlTextArea
     
     return this
 end function
@@ -34,7 +36,7 @@ end function
 '@return true if successful
 function TextArea_Draw(component as Object) as Boolean
     for each line in m.lines
-        if not line.draw(component)
+        if not line.Draw(component)
             return false
         end if
     end for
@@ -43,26 +45,33 @@ end function
 
 'Sets the text of this RlTextArea
 '@param text the text to be shown in the RlTextArea
-function TextArea_SetText(text as String) as Void
-    words = stringToWords(text)
+function TextArea_Init() as Void
+    words = stringToWords(m.text)
     wordMax = words.Count() - 1
     
     lines = []
     
     ellipses = "..."
-    ellipseWidth = font.GetOneLineWidth(ellipses, 9999)
+    ellipseWidth = m.font.GetOneLineWidth(ellipses, 9999)
     
+    tempHeight = 0
     for i = 0 to m.maxLines - 1
-        lines[i] = ""
+        'Check that we aren't exceeding the maximum height. Otherwise, simply exit the for loop
+        tempHeight = tempHeight + GetFontHeight(m.font)
+        if tempHeight > m.height
+            exit for
+        end if
         
-        while words.Count() > 0 and font.GetOneLineWidth(words[0], 9999) <= m.width - font.GetOneLineWidth(lines[i], 9999) 'While a word can fit in the remaining width
+        lines[i] = ""
+       
+        while words.Count() > 0 and GetFontWidth(m.font, words[0]) <= m.width - GetFontWidth(m.font, lines[i]) 'While a word can fit in the remaining width
             if i < maxLines - 1 'Not on last line, just put the word as long as it fits
                 lines[i] = lines[i] + words.Shift() + " "
             else if i = m.maxLines - 1 'Special case for the last line (possible ellipses)
                 if words.Count() = 1
                     lines[i] = lines[i] + words.Shift()
                 else 'Check whether we can fit that word and ellipses in remaining width
-                    if font.GetOneLineWidth(words[0], 9999) + ellipseWidth <= m.width - font.GetOneLineWidth(lines[i], 9999)
+                    if GetFontWidth(m.font, words[0]) + ellipseWidth <= m.width - GetFontWidth(m.font, lines[i])
                         lines[i] = lines[i] + words.Shift() + " "
                     else
                         exit while
@@ -76,10 +85,18 @@ function TextArea_SetText(text as String) as Void
         end if
     end for
     
-    m.lines = []
-    iMax = lines.Count() - 1
-    
-    for i = 0 to iMax
-        m.lines = TextLine(lines[i], m.font, m.rgba, m.x, m.y + i * m.spacing * m.font.GetOneLineHeight(), align)
+    'Make Text elements for each line
+    m.textLines = []
+    max = lines.Count() - 1
+    for i = 0 to max
+        'Calculate correct x coordinate for alignment
+        if align = "center"
+            tempX = m.x + (m.width - GetFontWidth(m.font, lines[i])) / 2
+        else if align = "right"
+            tempX = m.x + m.width - GetFontWidth(m.font, lines[i])
+        else 'Default alignment is left
+            tempX = m.x
+        end if
+        m.textLines[i] = RlText(lines[i], m.font, m.rgba, tempX, m.y + i * m.spacing * GetFontHeight(m.font))
     end for
 end function
