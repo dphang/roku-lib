@@ -5,7 +5,7 @@
 '@param x the x coordinate of the main image
 '@param y the y coordinate of the main image
 '@param VISIBLE_IMAGES an Integer array containing two values, which respectively specify the number of images on the left and right of the main image. Default is [3, 3]
-function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, ANIMATION_TIME = 0.0 as Float, VISIBLE_IMAGES = [4, 4] as Object, WRAP_AROUND = false as Boolean) as Object
+function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, ANIMATION_TIME = 0.25 as Float, VISIBLE_IMAGES = [4, 4] as Object, WRAP_AROUND = false as Boolean) as Object
     this = {
         bigShadow: bigShadow
         smallShadow: smallShadow
@@ -74,6 +74,21 @@ end function
 '@param direction the direction to move in. 1 for right and -1 for left
 function RlCarousel_Move(direction as Integer) as Void
     print "RlCarousel.Move()"
+    'Small shadow constants
+    smallPath = m.smallShadow.path
+    smallOffsetX = m.smallShadow.offsetX
+    smallOffsetY = m.smallShadow.offsetY
+    smallWidth = m.smallShadow.width
+    smallHeight = m.smallShadow.height
+    
+    'Big shadow constants
+    bigPath = m.bigShadow.path
+    bigOffsetX = m.bigShadow.offsetX
+    bigOffsetY = m.bigShadow.offsetY
+    bigWidth = m.bigShadow.width
+    bigHeight = m.bigShadow.height
+    
+    actualX = m.x - bigOffsetX 'Since the main shadow has an offset shadow border
     
     if (direction = -1 and m.index > 0) or (direction = 1 and m.index < 99 - 1)
         m.moving = true
@@ -85,10 +100,32 @@ function RlCarousel_Move(direction as Integer) as Void
             shadow = m.visibleShadows[i]
             if shadow.moveLeft > 0 and direction <> m.direction 'Animation interrupted (reversed) direction
                 shadow.moveTotal = shadow.moveLeft
+                shadow.scaleTotal = 1 / shadow.scaleLeft
             else
-                shadow.moveTotal = m.bigShadow.width
+                if shadow.x = actualX 'Shadow is the big shadow
+                    if direction = -1
+                        shadow.moveTotal = bigWidth
+                        shadow.scaleTotal = smallWidth / bigWidth
+                    else if direction = 1
+                        shadow.moveTotal = smallWidth
+                        shadow.scaleTotal = smallWidth / bigWidth
+                    end if
+                else 'Shadow is the small shadow
+                    if shadow.x = actualX + bigWidth and direction = 1 'To the right of the big shadow and moving left
+                        shadow.moveTotal = bigWidth
+                        shadow.scaleTotal = bigWidth / smallWidth
+                    else if shadow.x = actualX - smallWidth and direction = -1 'To the left of the big shadow and moving right
+                        shadow.moveTotal = smallWidth
+                        shadow.scaleTotal = bigWidth / smallWidth
+                    else 'All other shadows move the small width, and do not scale
+                        shadow.moveTotal = smallWidth
+                        shadow.scaleTotal = 1
+                    end if
+                end if
             end if
+            
             shadow.moveLeft = shadow.moveTotal
+            shadow.scaleLeft = shadow.scaleTotal
         end for
     end if
     
@@ -104,7 +141,7 @@ function RlCarousel_Update(delta as Float) as Boolean
             shadow = m.visibleShadows[i]
             print tostr(shadow.moveLeft)
             if shadow.moveLeft > 0
-                if m.ANIMATION_TIME <> 0
+                if m.ANIMATION_TIME > 0
                     moveAmount = - m.direction * delta * (shadow.moveTotal / m.ANIMATION_TIME)
                     if abs(moveAmount) > shadow.moveTotal then moveAmount = - m.direction * shadow.moveLeft
                 else
