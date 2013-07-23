@@ -35,7 +35,7 @@ end function
 '@param screen a roScreen/roBitmap/roRegion object
 '@return true if successful
 function TextArea_Draw(component as Object) as Boolean
-    for each line in m.lines
+    for each line in m.textLines
         if not line.Draw(component)
             return false
         end if
@@ -65,7 +65,7 @@ function TextArea_Init() as Void
         lines[i] = ""
        
         while words.Count() > 0 and GetFontWidth(m.font, words[0]) <= m.width - GetFontWidth(m.font, lines[i]) 'While a word can fit in the remaining width
-            if i < maxLines - 1 'Not on last line, just put the word as long as it fits
+            if i < m.maxLines - 1 'Not on last line, just put the word as long as it fits
                 lines[i] = lines[i] + words.Shift() + " "
             else if i = m.maxLines - 1 'Special case for the last line (possible ellipses)
                 if words.Count() = 1
@@ -90,9 +90,9 @@ function TextArea_Init() as Void
     max = lines.Count() - 1
     for i = 0 to max
         'Calculate correct x coordinate for alignment
-        if align = "center"
+        if m.align = "center"
             tempX = m.x + (m.width - GetFontWidth(m.font, lines[i])) / 2
-        else if align = "right"
+        else if m.align = "right"
             tempX = m.x + m.width - GetFontWidth(m.font, lines[i])
         else 'Default alignment is left
             tempX = m.x
