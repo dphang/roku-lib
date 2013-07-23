@@ -52,22 +52,29 @@ function RlCarousel_Init() as Void
     
     actualX = m.x - bigOffsetX 'Since the main shadow has an offset shadow border
     
-    'Initialize small shadows
-    max = m.VISIBLE_IMAGES[0] + m.VISIBLE_IMAGES[1] - 1
-    for i = 0 to max
-        shadow = RlImage(smallPath, actualX + bigWidth + i * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
-        shadow.moveLeft = 0.0
-        m.visibleShadows.Push(shadow)
-    end for
-    
+    max = m.images.Count()
     'Initialize big shadow
-    bigShadow = RlImage(bigPath, actualX, m.y, bigWidth, bigHeight)
-    bigShadow.moveLeft = 0.0
-    m.visibleShadows.Push(bigShadow)
-    m.visibleImages = []
+    if max <> 0
+        bigShadow = RlImage(bigPath, actualX, m.y, bigWidth, bigHeight)
+        bigShadow.moveLeft = 0.0
+        bigShadow.moveTotal = 0.0
+        bigShadow.scaleLeft = 1.0
+        m.visibleShadows.Push(bigShadow)
+        m.visibleImages = []
+        
+        'Initialize small shadows
+        max = RlMin(m.VISIBLE_IMAGES[0] + m.VISIBLE_IMAGES[1] - 1, max - 2)
+        for i = 0 to max
+            shadow = RlImage(smallPath, actualX + bigWidth + i * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
+            shadow.moveLeft = 0.0
+            shadow.moveTotal = 0.0
+            shadow.scaleLeft = 1.0
+            m.visibleShadows.Push(shadow)
+        end for
+    end if
     
-    m.wrapLeftX = actualX - (m.VISIBLE_IMAGES[1] - 2) * smallWidth
-    m.wrapRightX = actualX + bigWidth + (m.VISIBLE_IMAGES[0] + 1) * smallWidth 
+    m.wrapLeftX = actualX - m.VISIBLE_IMAGES[0] * smallWidth
+    m.wrapRightX = actualX + bigWidth + m.VISIBLE_IMAGES[1] * smallWidth 
 end function
 
 'Set this carousel to start moving to the next item (right) or previous item (left).
@@ -87,19 +94,15 @@ function RlCarousel_Move(direction as Integer) as Void
     bigOffsetY = m.bigShadow.offsetY
     bigWidth = m.bigShadow.width
     bigHeight = m.bigShadow.height
-    
     actualX = m.x - bigOffsetX 'Since the main shadow has an offset shadow border
     
-    if (direction = -1 and m.index > 0) or (direction = 1 and m.index < 99 - 1)
-        m.moving = true
-        m.direction = direction        
-        
+    if (direction = -1 and m.index > 0) or (direction = 1 and m.index < m.images.Count() - 1)
         'Calculate move amounts
         max = m.visibleShadows.Count() - 1
         for i = 0 to max
             shadow = m.visibleShadows[i]
-            if shadow.moveLeft > 0 and direction <> m.direction 'Animation interrupted (reversed) direction
-                shadow.moveTotal = shadow.moveLeft
+            if shadow.moveLeft > 0 and direction = - m.direction 'Animation reversed direction
+                shadow.moveLeft = RlModulo(int(shadow.moveCurrent), int(shadow.movePer)) 'Reverse the movement (i.e. the current amount moved)
                 shadow.scaleTotal = 1 / shadow.scaleLeft
             else
                 if shadow.x = actualX 'Shadow is the big shadow
@@ -122,45 +125,76 @@ function RlCarousel_Move(direction as Integer) as Void
                         shadow.scaleTotal = 1
                     end if
                 end if
+                
+                shadow.moveCurrent = 0.0
+                shadow.movePer = shadow.moveTotal 'Left/right movement of 1 unit
+                shadow.moveTotal = shadow.moveLeft + shadow.moveTotal
+                shadow.scaleTotal = shadow.scaleLeft * shadow.scaleTotal
+                shadow.moveLeft = shadow.moveTotal
+                shadow.scaleLeft = shadow.scaleTotal
             end if
-            
-            shadow.moveLeft = shadow.moveTotal
-            shadow.scaleLeft = shadow.scaleTotal
         end for
+        
+        m.moving = true
+        m.direction = direction
     end if
     
 end function
 
 'Update the carousel, independent of frame rate (since Roku 1/2/3 devices have different max framerates)
+'@param delta the change in time value
+'@return true if updated
 function RlCarousel_Update(delta as Float) as Boolean
+    max = m.visibleShadows.Count() - 1
     if m.moving
         print "RlCarousel.Update()"
-        print "Delta: " + tostr(delta)
-        max = m.visibleShadows.Count() - 1
-        for i = 0 to max
-            shadow = m.visibleShadows[i]
-            print tostr(shadow.moveLeft)
-            if shadow.moveLeft > 0
-                if m.ANIMATION_TIME > 0
+        
+        'Move each shadow
+        if m.ANIMATION_TIME > 0
+            for i = 0 to max
+                shadow = m.visibleShadows[i]
+                if shadow.moveLeft > 0
                     moveAmount = - m.direction * delta * (shadow.moveTotal / m.ANIMATION_TIME)
-                    if abs(moveAmount) > shadow.moveTotal then moveAmount = - m.direction * shadow.moveLeft
+                    if abs(moveAmount) > shadow.moveLeft then moveAmount = - m.direction * shadow.moveLeft
+                    shadow.x = shadow.x + moveAmount
+                    shadow.moveCurrent = shadow.moveCurrent + abs(moveAmount)
+                    shadow.moveLeft = shadow.moveTotal - shadow.moveCurrent
+                    m.moving = true
                 else
-                    moveAmount = - m.direction * shadow.moveTotal
+                    m.moving = false
                 end if
-                shadow.x = shadow.x + moveAmount
-                'Wrap the shadow to the other side (to seem like it's continuous)
-                if shadow.x < m.wrapLeftX
-                    shadow.x = m.wrapRightX
-                else if shadow.x > m.wrapRightX
-                    shadow.x = m.wrapLeftX
-                end if
-                shadow.moveLeft = shadow.moveLeft - abs(moveAmount)
-                m.moving = true
-            else
-                m.moving = false
-            end if
-        end for
+            end for
+'            
+'            movePer = m.visibleShadows[0].movePer
+'            moveCurrent = m.visibleShadows[0].moveCurrent
+'            if moveCurrent >= movePer 'Check an arbitrary shadow, whether it has moved one unit. Then increment index
+'                m.index = m.index + m.direction
+'            end if
+        end if
+        
+        'Swap the positions of shadows (wrap around case) once they stopped moving
+        temp = m.visibleShadows[0]
+        if temp.x < m.wrapLeftX and m.index + m.VISIBLE_IMAGES[1] < m.images.Count() - 1 'Left wraparound
+            temp.x = m.visibleShadows[max].x + m.visibleShadows[max].width
+            for i = 0 to max - 1
+                m.visibleShadows[i] = m.visibleShadows[i + 1]
+            end for
+            m.visibleShadows[max] = temp
+        end if
+        
+'        temp = m.visibleShadows[max]
+'        if temp.x > m.wrapRightX and m.index - m.VISIBLE_IMAGES[0] > 0 'Right wraparound
+'        
+'            temp.x = m.visibleShadows[0].x - m.visibleShadows[0].width
+'            for i = max to 1
+'                m.visibleShadows[i] = m.visibleShadows[i - 1]
+'            end for
+'            m.visibleShadows[0] = temp
+'        end if
         return true
+    else    
+        m.direction = 0
+        return false
     end if
     
     return false
