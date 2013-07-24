@@ -5,7 +5,7 @@
 '@param x the x coordinate of the main image
 '@param y the y coordinate of the main image
 '@param VISIBLE_IMAGES an Integer array containing two values, which respectively specify the number of images on the left and right of the main image. Default is [3, 3]
-function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, ANIMATION_TIME = 0.25 as Float, VISIBLE_IMAGES = [4, 4] as Object, WRAP_AROUND = false as Boolean) as Object
+function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, ANIMATION_TIME = 0.25 as Float, VISIBLE_IMAGES = [40, 40] as Object, WRAP_AROUND = false as Boolean) as Object
     this = {
         bigShadow: bigShadow
         smallShadow: smallShadow
@@ -14,6 +14,8 @@ function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object
         y: y
         
         moving: false
+        reversed: false
+        advance: false
         direction: 0
         index: 0
         
@@ -26,6 +28,7 @@ function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object
         Draw: RlCarousel_Draw
         Update: RlCarousel_Update
     }
+    
     
     this.Init()
     
@@ -56,9 +59,10 @@ function RlCarousel_Init() as Void
     'Initialize big shadow
     if max <> 0
         bigShadow = RlImage(bigPath, actualX, m.y, bigWidth, bigHeight)
-        bigShadow.moveLeft = 0.0
-        bigShadow.moveTotal = 0.0
-        bigShadow.scaleLeft = 1.0
+        bigShadow.moveLeft = 0
+        bigShadow.moveCurrent = 0
+        bigShadow.moveTotal = 0
+        bigShadow.scaleLeft = 1
         m.visibleShadows.Push(bigShadow)
         m.visibleImages = []
         
@@ -66,9 +70,10 @@ function RlCarousel_Init() as Void
         max = RlMin(m.VISIBLE_IMAGES[0] + m.VISIBLE_IMAGES[1] - 1, max - 2)
         for i = 0 to max
             shadow = RlImage(smallPath, actualX + bigWidth + i * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
-            shadow.moveLeft = 0.0
-            shadow.moveTotal = 0.0
-            shadow.scaleLeft = 1.0
+            shadow.moveLeft = 0
+            shadow.moveCurrent = 0
+            shadow.moveTotal = 0
+            shadow.scaleLeft = 1
             m.visibleShadows.Push(shadow)
         end for
     end if
@@ -78,9 +83,9 @@ function RlCarousel_Init() as Void
 end function
 
 'Set this carousel to start moving to the next item (right) or previous item (left).
-'@param direction the direction to move in. 1 for right and -1 for left
+'@param direction the direction to move in. 1 for right and -1 for left. 0 stops the carousel
 function RlCarousel_Move(direction as Integer) as Void
-    print "RlCarousel.Move()"
+    'print "RlCarousel.Move()"
     'Small shadow constants
     smallPath = m.smallShadow.path
     smallOffsetX = m.smallShadow.offsetX
@@ -101,10 +106,13 @@ function RlCarousel_Move(direction as Integer) as Void
         max = m.visibleShadows.Count() - 1
         for i = 0 to max
             shadow = m.visibleShadows[i]
-            if shadow.moveLeft > 0 and direction = - m.direction 'Animation reversed direction
-                shadow.moveLeft = RlModulo(int(shadow.moveCurrent), int(shadow.movePer)) 'Reverse the movement (i.e. the current amount moved)
+            if direction = - m.direction 'Animation reversed direction
+                shadow.moveLeft = RlModulo(shadow.moveCurrent, shadow.movePer) 'Reverse movement to the nearest previous item
+                shadow.moveTotal = shadow.movePer
+                'shadow.moveCurrent = shadow.moveTotal - shadow.moveLeft 'Reverse movement to the nearest previous item
                 shadow.scaleTotal = 1 / shadow.scaleLeft
-            else
+                m.reversed = true  
+            else 'Continuing in same direction, or new direction
                 if shadow.x = actualX 'Shadow is the big shadow
                     if direction = -1
                         shadow.moveTotal = bigWidth
@@ -126,15 +134,23 @@ function RlCarousel_Move(direction as Integer) as Void
                     end if
                 end if
                 
-                shadow.moveCurrent = 0.0
-                shadow.movePer = shadow.moveTotal 'Left/right movement of 1 unit
-                shadow.moveTotal = shadow.moveLeft + shadow.moveTotal
-                shadow.scaleTotal = shadow.scaleLeft * shadow.scaleTotal
-                shadow.moveLeft = shadow.moveTotal
-                shadow.scaleLeft = shadow.scaleTotal
+                if not m.moving
+                    shadow.movePer = shadow.moveTotal
+                    shadow.moveLeft = shadow.moveTotal
+                    shadow.moveCurrent = 0
+                else 'Adding to current direction
+                    'shadow.moveCurrent = shadow.moveTotal - shadow.moveLeft
+                    shadow.movePer = shadow.moveTotal 'Left/right movement of 1 unit
+                    shadow.moveTotal = shadow.moveLeft + shadow.moveTotal
+                    shadow.scaleTotal = shadow.scaleLeft * shadow.scaleTotal
+                    shadow.moveLeft = shadow.moveTotal
+                    shadow.scaleLeft = shadow.scaleTotal 
+                end if
+                
+
             end if
         end for
-        
+
         m.moving = true
         m.direction = direction
     end if
@@ -147,52 +163,60 @@ end function
 function RlCarousel_Update(delta as Float) as Boolean
     max = m.visibleShadows.Count() - 1
     if m.moving
-        print "RlCarousel.Update()"
+        'print "RlCarousel.Update()"
         
-        'Move each shadow
+        'Move each shadow if animation time is nonzero
         if m.ANIMATION_TIME > 0
             for i = 0 to max
                 shadow = m.visibleShadows[i]
                 if shadow.moveLeft > 0
-                    moveAmount = - m.direction * delta * (shadow.moveTotal / m.ANIMATION_TIME)
-                    if abs(moveAmount) > shadow.moveLeft then moveAmount = - m.direction * shadow.moveLeft
+                    moveAmount = int(- m.direction * delta * (shadow.moveTotal / m.ANIMATION_TIME))
+                    if abs(moveAmount) > shadow.moveLeft then moveAmount = - m.direction * shadow.moveLeft 'moveAmount greater than moveLeft, clamp it
                     shadow.x = shadow.x + moveAmount
                     shadow.moveCurrent = shadow.moveCurrent + abs(moveAmount)
-                    shadow.moveLeft = shadow.moveTotal - shadow.moveCurrent
+                    print "Shadow.movecurrent: " + tostr(shadow.moveCurrent)
+                    print "shadow.movper: " + tostr(shadow.movePer)                                 
+                    shadow.moveLeft = shadow.moveLeft - abs(moveAmount)
+                    
                     m.moving = true
                 else
                     m.moving = false
                 end if
-            end for
-'            
-'            movePer = m.visibleShadows[0].movePer
-'            moveCurrent = m.visibleShadows[0].moveCurrent
-'            if moveCurrent >= movePer 'Check an arbitrary shadow, whether it has moved one unit. Then increment index
-'                m.index = m.index + m.direction
-'            end if
+            end for          
+        end if
+        
+        shadow = m.visibleShadows[0]
+        
+        if shadow.moveCurrent >= shadow.movePer and not m.reversed 'm.advance and not m.reversed
+            shadow.moveCurrent = 0 'Reset the current position to 0
+            m.index = m.index + m.direction
         end if
         
         'Swap the positions of shadows (wrap around case) once they stopped moving
-        temp = m.visibleShadows[0]
-        if temp.x < m.wrapLeftX and m.index + m.VISIBLE_IMAGES[1] < m.images.Count() - 1 'Left wraparound
-            temp.x = m.visibleShadows[max].x + m.visibleShadows[max].width
-            for i = 0 to max - 1
-                m.visibleShadows[i] = m.visibleShadows[i + 1]
-            end for
-            m.visibleShadows[max] = temp
-        end if
+'        temp = m.visibleShadows[0]
+'        if temp.x < m.wrapLeftX and m.index + m.VISIBLE_IMAGES[1] < m.images.Count() - 1 'Left wraparound
+'            temp.x = m.visibleShadows[max].x + m.visibleShadows[max].width
+'            for i = 0 to max - 1
+'                m.visibleShadows[i] = m.visibleShadows[i + 1]
+'            end for
+'            m.visibleShadows[max] = temp
+'        end if
         
 '        temp = m.visibleShadows[max]
 '        if temp.x > m.wrapRightX and m.index - m.VISIBLE_IMAGES[0] > 0 'Right wraparound
-'        
 '            temp.x = m.visibleShadows[0].x - m.visibleShadows[0].width
 '            for i = max to 1
 '                m.visibleShadows[i] = m.visibleShadows[i - 1]
 '            end for
 '            m.visibleShadows[0] = temp
 '        end if
+'        
+        'Check if an arbitrary shadow has moved one full unit
+
+        
         return true
     else    
+        m.reversed = false
         m.direction = 0
         return false
     end if

@@ -18,10 +18,12 @@ end function
 '@param path the path to an image file
 '@return a roBitmap object
 function RlBitmapManager_GetBitmap(path as String) as Object
-    if not m.DoesExist(path)
-        bitmap = CreateObject("roBitmap", path)
-        m.bitmaps[path] = bitmap
+    if not m.bitmaps.DoesExist(path)
+        m.bitmaps[path] = CreateObject("roBitmap", path)
     end if
+    
+    
+    bitmap = m.bitmaps[path]
     
     if bitmap = invalid
         print "Bitmap could not be initialized"
