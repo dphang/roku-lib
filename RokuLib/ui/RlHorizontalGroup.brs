@@ -3,7 +3,7 @@
 '@param x the x coordinate of the first element
 '@param y the y coordinate of the first element
 '@return a RlHorizontalGroup object
-function RlHorizontalGroup(offset as Integer, x as Integer, y as Integer) as Object
+function RlHorizontalGroup(offset = 0 as Integer, x = 0 as Integer, y = 0 as Integer) as Object
     this = {
         offset: offset
         x: x
@@ -58,6 +58,13 @@ end function
 '@return the size of this RlHorizontalGroup
 function RlHorizontalGroup_Count() as Integer
     return m.elements.Count()
+end function
+
+'Sets this RlHorizontalGroup based on its parameters. Call this after setting some x, y, or offset
+function RlHorizontalGroup_Set() as Void
+    elements = m.elements
+    m.elements = []
+    m.Append(elements)
 end function
 
 'Draws this RlHorizontalGroup to the specified component
