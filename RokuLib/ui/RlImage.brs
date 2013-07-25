@@ -30,7 +30,8 @@ end function
 function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
     'Lazy allocation
     if m.bitmap = invalid
-        m.bitmap = m.BitmapManager.GetBitmap(m.path)
+        m.bitmap = m.bitmapManager.GetBitmap(m.path)
+        print type(m.bitmap)
         if m.width = invalid then m.width = m.bitmap.GetWidth()
         if m.height = invalid then m.height = m.bitmap.GetHeight()
     end if

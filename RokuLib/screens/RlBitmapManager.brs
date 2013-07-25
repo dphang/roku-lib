@@ -7,7 +7,7 @@ function RlBitmapManager() as Object
         
         GetBitmap: RlBitmapManager_GetBitmap
         ClearBitmap: RlBitmapManager_ClearBitmap
-        ClearAll: RlBitmapManager_ClearAll
+        Clear: RlBitmapManager_Clear
     }
     
     return this
@@ -21,7 +21,6 @@ function RlBitmapManager_GetBitmap(path as String) as Object
     if not m.bitmaps.DoesExist(path)
         m.bitmaps[path] = CreateObject("roBitmap", path)
     end if
-    
     
     bitmap = m.bitmaps[path]
     
@@ -43,6 +42,6 @@ function RlBitmapManager_ClearBitmap(path as String) as Void
 end function
 
 'Clears all allocated roBitmaps
-function RlBitmapManager_ClearAll() as Void
+function RlBitmapManager_Clear() as Void
     m.bitmaps.Clear()
 end function

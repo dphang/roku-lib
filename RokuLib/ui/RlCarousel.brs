@@ -19,6 +19,7 @@ function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object
         direction: 0
         index: 0
         
+        DEFAULT_ANIMATION_TIME: ANIMATION_TIME
         'Constants
         ANIMATION_TIME: ANIMATION_TIME 'If the value is 0, then animation is instant
         VISIBLE_IMAGES: VISIBLE_IMAGES
@@ -166,54 +167,55 @@ function RlCarousel_Update(delta as Float) as Boolean
         'print "RlCarousel.Update()"
         
         'Move each shadow if animation time is nonzero
-        if m.ANIMATION_TIME > 0
-            for i = 0 to max
-                shadow = m.visibleShadows[i]
-                if shadow.moveLeft > 0
+        for i = 0 to max
+            shadow = m.visibleShadows[i]
+            if shadow.moveLeft > 0
+                if m.ANIMATION_TIME > 0 
                     moveAmount = int(- m.direction * delta * (shadow.moveTotal / m.ANIMATION_TIME))
-                    if abs(moveAmount) > shadow.moveLeft then moveAmount = - m.direction * shadow.moveLeft 'moveAmount greater than moveLeft, clamp it
-                    shadow.x = shadow.x + moveAmount
-                    shadow.moveCurrent = shadow.moveCurrent + abs(moveAmount)
-                    print "Shadow.movecurrent: " + tostr(shadow.moveCurrent)
-                    print "shadow.movper: " + tostr(shadow.movePer)                                 
-                    shadow.moveLeft = shadow.moveLeft - abs(moveAmount)
-                    
-                    m.moving = true
                 else
-                    m.moving = false
+                    moveAmount = int(- m.direction * shadow.moveTotal)
                 end if
-            end for          
-        end if
-        
+                
+                if abs(moveAmount) > shadow.moveLeft then moveAmount = - m.direction * shadow.moveLeft 'moveAmount greater than moveLeft, clamp it
+                shadow.x = shadow.x + moveAmount
+                shadow.moveCurrent = shadow.moveCurrent + abs(moveAmount)
+                'print "Shadow.movecurrent: " + tostr(shadow.moveCurrent)
+                'print "shadow.movper: " + tostr(shadow.movePer)                                 
+                shadow.moveLeft = shadow.moveLeft - abs(moveAmount)
+                
+                m.moving = true
+            else
+                m.moving = false
+            end if
+        end for          
+    
         shadow = m.visibleShadows[0]
         
-        if shadow.moveCurrent >= shadow.movePer and not m.reversed 'm.advance and not m.reversed
-            shadow.moveCurrent = 0 'Reset the current position to 0
+        if shadow.moveCurrent >= shadow.movePer and not m.reversed 'I.e. moved past a single unit
+            shadow.moveCurrent = 0 'Reset the position past a single unit to 0
             m.index = m.index + m.direction
+            if m.index < 0 then m.index = 0
+            if m.index > m.images.Count() - 1 then m.index = m.images.Count() - 1
         end if
         
         'Swap the positions of shadows (wrap around case) once they stopped moving
-'        temp = m.visibleShadows[0]
-'        if temp.x < m.wrapLeftX and m.index + m.VISIBLE_IMAGES[1] < m.images.Count() - 1 'Left wraparound
-'            temp.x = m.visibleShadows[max].x + m.visibleShadows[max].width
-'            for i = 0 to max - 1
-'                m.visibleShadows[i] = m.visibleShadows[i + 1]
-'            end for
-'            m.visibleShadows[max] = temp
-'        end if
+        temp = m.visibleShadows[0]
+        if temp.x < m.wrapLeftX and m.index + m.VISIBLE_IMAGES[1] < m.images.Count() - 1 'Left wraparound
+            temp.x = m.visibleShadows[max].x + m.visibleShadows[max].width
+            for i = 0 to max - 1
+                m.visibleShadows[i] = m.visibleShadows[i + 1]
+            end for
+            m.visibleShadows[max] = temp
+        end if
         
-'        temp = m.visibleShadows[max]
-'        if temp.x > m.wrapRightX and m.index - m.VISIBLE_IMAGES[0] > 0 'Right wraparound
-'            temp.x = m.visibleShadows[0].x - m.visibleShadows[0].width
-'            for i = max to 1
-'                m.visibleShadows[i] = m.visibleShadows[i - 1]
-'            end for
-'            m.visibleShadows[0] = temp
-'        end if
-'        
-        'Check if an arbitrary shadow has moved one full unit
-
-        
+        temp = m.visibleShadows[max]
+        if temp.x > m.wrapRightX and m.index - m.VISIBLE_IMAGES[0] > 0 'Right wraparound
+            temp.x = m.visibleShadows[0].x - temp.width
+            for i = max to 1
+                m.visibleShadows[i] = m.visibleShadows[i - 1]
+            end for
+            m.visibleShadows[0] = temp
+        end if        
         return true
     else    
         m.reversed = false
