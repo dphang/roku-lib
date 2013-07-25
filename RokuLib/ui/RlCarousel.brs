@@ -135,19 +135,25 @@ function RlCarousel_Move(direction as Integer) as Void
                     end if
                 end if
                 
-                if not m.moving
+                if not m.moving 'Starting from 0
                     shadow.movePer = shadow.moveTotal
-                    shadow.moveLeft = shadow.moveTotal
                     shadow.moveCurrent = 0
+                    shadow.moveLeft = shadow.moveTotal
                 else 'Adding to current direction
                     'shadow.moveCurrent = shadow.moveTotal - shadow.moveLeft
                     shadow.movePer = shadow.moveTotal 'Left/right movement of 1 unit
                     shadow.moveTotal = shadow.moveLeft + shadow.moveTotal
                     shadow.scaleTotal = shadow.scaleLeft * shadow.scaleTotal
-                    shadow.moveLeft = shadow.moveTotal
                     shadow.scaleLeft = shadow.scaleTotal 
+                    shadow.moveLeft = shadow.moveTotal
+                    'Clamp move left to be however much movement is available
+                    if direction = 1 
+                        diff = m.images.Count() - 2 - m.index
+                    else if direction = -1
+                        diff = m.index - 1
+                    end if
+                    shadow.moveLeft = RlMin(shadow.moveLeft, RlModulo(shadow.moveLeft, shadow.movePer) + (diff * shadow.movePer))
                 end if
-                
 
             end if
         end for
@@ -162,10 +168,9 @@ end function
 '@param delta the change in time value
 '@return true if updated
 function RlCarousel_Update(delta as Float) as Boolean
-    max = m.visibleShadows.Count() - 1
     if m.moving
         'print "RlCarousel.Update()"
-        
+        max = m.visibleShadows.Count() - 1
         'Move each shadow if animation time is nonzero
         for i = 0 to max
             shadow = m.visibleShadows[i]
@@ -195,7 +200,8 @@ function RlCarousel_Update(delta as Float) as Boolean
             shadow.moveCurrent = 0 'Reset the position past a single unit to 0
             m.index = m.index + m.direction
             if m.index < 0 then m.index = 0
-            if m.index > m.images.Count() - 1 then m.index = m.images.Count() - 1
+            imageMax = m.images.Count() - 1
+            if m.index > imageMax then m.index = imageMax
         end if
         
         'Swap the positions of shadows (wrap around case) once they stopped moving
