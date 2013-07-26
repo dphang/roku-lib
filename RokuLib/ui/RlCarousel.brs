@@ -239,4 +239,3 @@ function RlCarousel_Draw(component as Object) as Boolean
     if not RlDrawAll(m.visibleShadows, component) then return false
     return true
 end function
-
