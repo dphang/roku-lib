@@ -2,7 +2,7 @@
 '@param text the text to be displayed on the button
 '@param action the String representing the RlButton's action
 '@return an RlButton object
-function RlButton(text as String, font as Object, rgba as Integer, action as String, focusableImage as Object, x as Integer, y as Integer, width = invalid, height = invalid) as Object
+function RlButton(text as String, font as Object, rgba as Integer, action as String, defaultBitmap as Object, focusedBitmap as Object, x as Integer, y as Integer, width = invalid, height = invalid) as Object
     this = {
         type: "RlButton"
         text: text
@@ -11,7 +11,7 @@ function RlButton(text as String, font as Object, rgba as Integer, action as Str
         action: action
         x: x
         y: y
-        image: focusableImage
+        image: RlFocusableImage(defaultBitmap, focusedBitmap, x, y, width, height)
         
         focused: false
         
