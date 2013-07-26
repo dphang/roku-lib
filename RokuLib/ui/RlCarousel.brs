@@ -102,15 +102,14 @@ function RlCarousel_Move(direction as Integer) as Void
     bigHeight = m.bigShadow.height
     actualX = m.x - bigOffsetX 'Since the main shadow has an offset shadow border
     
-    if (direction = -1 and m.index > 0) or (direction = 1 and m.index < m.images.Count() - 1)
+    if (direction = -1) or (direction = 1)
         'Calculate move amounts
         max = m.visibleShadows.Count() - 1
         for i = 0 to max
             shadow = m.visibleShadows[i]
             if direction = - m.direction 'Animation reversed direction
                 shadow.moveLeft = RlModulo(shadow.moveCurrent, shadow.movePer) 'Reverse movement to the nearest previous item
-                shadow.moveTotal = shadow.movePer
-                'shadow.moveCurrent = shadow.moveTotal - shadow.moveLeft 'Reverse movement to the nearest previous item
+                shadow.moveTotal = shadow.movePer 'Total movement rate should simulate moving one complete frame
                 shadow.scaleTotal = 1 / shadow.scaleLeft
                 m.reversed = true  
             else 'Continuing in same direction, or new direction
@@ -148,7 +147,13 @@ function RlCarousel_Move(direction as Integer) as Void
                     shadow.scaleLeft = shadow.scaleTotal 
                 end if
                 
-
+                'Clamp maximum moveAmount
+                if m.direction = -1 and m.direction = direction
+                	shadow.moveLeft = RlMin(shadow.moveLeft, shadow.movePer * (m.index) - RlModulo(shadow.moveCurrent, shadow.movePer))
+                else if m.direction = 1 and m.direction = direction
+                	shadow.moveLeft = RlMin(shadow.moveLeft, shadow.movePer * (m.images.Count() - 1 - m.index) - RlModulo(shadow.moveCurrent, shadow.movePer))
+            	end if
+            	
             end if
         end for
 
@@ -166,22 +171,27 @@ function RlCarousel_Update(delta as Float) as Boolean
     if m.moving
         'print "RlCarousel.Update()"
         
-        'Move each shadow if animation time is nonzero
+        'Move and scale each shadow if animation time is nonzero
         for i = 0 to max
             shadow = m.visibleShadows[i]
             if shadow.moveLeft > 0
                 if m.ANIMATION_TIME > 0 
                     moveAmount = int(- m.direction * delta * (shadow.moveTotal / m.ANIMATION_TIME))
+                    scaleAmount = delta * (shadow.scaleTotal - 1) / m.ANIMATION_TIME
                 else
                     moveAmount = int(- m.direction * shadow.moveTotal)
+                    scaleAmount = 1
                 end if
                 
                 if abs(moveAmount) > shadow.moveLeft then moveAmount = - m.direction * shadow.moveLeft 'moveAmount greater than moveLeft, clamp it
+                if abs(scaleAmount) > shadow.scaleLeft then scaleAmount = - m.direction * shadow.scaleLeft 'moveAmount greater than moveLeft, clamp it
                 shadow.x = shadow.x + moveAmount
-                shadow.moveCurrent = shadow.moveCurrent + abs(moveAmount)
-                'print "Shadow.movecurrent: " + tostr(shadow.moveCurrent)
-                'print "shadow.movper: " + tostr(shadow.movePer)                                 
+                shadow.width = shadow.width * scaleAmount
+                shadow.height = shadow.height * scaleAmount
+                
+                shadow.moveCurrent = shadow.moveCurrent + abs(moveAmount)                         
                 shadow.moveLeft = shadow.moveLeft - abs(moveAmount)
+                shadow.scaleLeft = shadow.scaleLeft / abs(scaleAmount)
                 
                 m.moving = true
             else
