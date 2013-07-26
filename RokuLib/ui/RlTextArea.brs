@@ -21,6 +21,7 @@ function RlTextArea(text as String, font as Object, rgba as Integer, x as Intege
         height: height
         maxLines: maxLines
         spacing: spacing
+        align: align
         
         Draw: TextArea_Draw
         Init: TextArea_Init
