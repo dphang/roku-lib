@@ -116,18 +116,18 @@ function RlCarousel_Move(direction as Integer) as Void
                 if shadow.x = actualX 'Shadow is the big shadow
                     if direction = -1
                         shadow.moveTotal = bigWidth
-                        shadow.scaleTotal = smallWidth / bigWidth
+                        shadow.scaleTotal = smallWidth / bigWidth - 1
                     else if direction = 1
                         shadow.moveTotal = smallWidth
-                        shadow.scaleTotal = smallWidth / bigWidth
+                        shadow.scaleTotal = smallWidth / bigWidth - 1
                     end if
                 else 'Shadow is the small shadow
                     if shadow.x = actualX + bigWidth and direction = 1 'To the right of the big shadow and moving left
                         shadow.moveTotal = bigWidth
-                        shadow.scaleTotal = bigWidth / smallWidth
+                        shadow.scaleTotal = bigWidth / smallWidth - 1
                     else if shadow.x = actualX - smallWidth and direction = -1 'To the left of the big shadow and moving right
                         shadow.moveTotal = smallWidth
-                        shadow.scaleTotal = bigWidth / smallWidth
+                        shadow.scaleTotal = bigWidth / smallWidth - 1
                     else 'All other shadows move the small width, and do not scale
                         shadow.moveTotal = smallWidth
                         shadow.scaleTotal = 1
@@ -177,21 +177,21 @@ function RlCarousel_Update(delta as Float) as Boolean
             if shadow.moveLeft > 0
                 if m.ANIMATION_TIME > 0 
                     moveAmount = int(- m.direction * delta * (shadow.moveTotal / m.ANIMATION_TIME))
-                    scaleAmount = delta * (shadow.scaleTotal - 1) / m.ANIMATION_TIME
+                    scaleAmount = delta * (shadow.scaleTotal) / m.ANIMATION_TIME
                 else
                     moveAmount = int(- m.direction * shadow.moveTotal)
-                    scaleAmount = 1
+                    scaleAmount = 0
                 end if
                 
                 if abs(moveAmount) > shadow.moveLeft then moveAmount = - m.direction * shadow.moveLeft 'moveAmount greater than moveLeft, clamp it
                 if abs(scaleAmount) > shadow.scaleLeft then scaleAmount = - m.direction * shadow.scaleLeft 'moveAmount greater than moveLeft, clamp it
                 shadow.x = shadow.x + moveAmount
-                shadow.width = shadow.width * scaleAmount
-                shadow.height = shadow.height * scaleAmount
+                shadow.width = shadow.width * (1 + scaleAmount)
+                shadow.height = shadow.height * (1 + scaleAmount)
                 
                 shadow.moveCurrent = shadow.moveCurrent + abs(moveAmount)                         
                 shadow.moveLeft = shadow.moveLeft - abs(moveAmount)
-                shadow.scaleLeft = shadow.scaleLeft / abs(scaleAmount)
+                shadow.scaleLeft = shadow.scaleLeft - abs(scaleAmount)
                 
                 m.moving = true
             else
