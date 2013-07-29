@@ -2,10 +2,10 @@
 '@param path a roBitmap/roRegion object or a String specifying an image path
 '@param x the x coordinate
 '@param y the y coordinate
-'@param width the width if known. Otherwise, the width will only be initialized when the bitmap is first allocated
-'@param height the height if known. Otherwise, the height will only be initialized when the bitmap is first allocated
+'@param width the width
+'@param height the height
 '@return an Image object
-function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic) as Object
+function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic, width as Integer, height as Integer) as Object
     this = {
         type: "RlImage"
         bitmapManager: m.bitmapManager
@@ -29,11 +29,7 @@ end function
 '@return true if successful
 function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
     'Lazy allocation
-    if m.bitmap = invalid
-        m.bitmap = m.BitmapManager.GetBitmap(m.path)
-        if m.width = invalid then m.width = m.bitmap.GetWidth()
-        if m.height = invalid then m.height = m.bitmap.GetHeight()
-    end if
+    m.bitmap = m.BitmapManager.GetBitmap(m.path)
     
     'Draw image
     if m.width <> m.bitmap.GetWidth() or m.height <> m.bitmap.GetHeight() 'Scaled draw
@@ -48,6 +44,8 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
     if conservative
         m.Deallocate()
     end if
+    
+    m.bitmap = invalid
     
     return success
 end function
