@@ -28,13 +28,8 @@ end function
 '@param conservative if set to true, the associated roBitmap is immediately deallocated after drawing, if possible
 '@return true if successful
 function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
-    'Lazy allocation
-    if m.bitmap = invalid
-        m.bitmap = m.bitmapManager.GetBitmap(m.path)
-        print type(m.bitmap)
-        if m.width = invalid then m.width = m.bitmap.GetWidth()
-        if m.height = invalid then m.height = m.bitmap.GetHeight()
-    end if
+    'Get the bitmap from the bitmap manager (lazy allocation)
+    m.bitmap = m.bitmapManager.GetBitmap(m.path)
     
     'Draw image
     if m.width <> m.bitmap.GetWidth() or m.height <> m.bitmap.GetHeight() 'Scaled draw
@@ -50,10 +45,13 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         m.Deallocate()
     end if
     
+    'Clear the reference to the bitmap for garbage collection (still exists in BitmapManager unless deallocated above)
+    m.bitmap = invalid
+    
     return success
 end function
 
-'Deletes the reference to the associated roBitmap (may also deallocate other images referencing the same bitmap)
+'Deletes the reference to the associated roBitmap from the bitmapManager
 function RlImage_Deallocate() as Void
     m.bitmapManager.ClearBitmap(m.path)
 end function
