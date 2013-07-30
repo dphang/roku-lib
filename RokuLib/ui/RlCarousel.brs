@@ -118,7 +118,7 @@ function RlCarousel_Move(direction as Integer) as Void
         max = m.visibleShadows.Count() - 1
         for i = 0 to max
             shadow = m.visibleShadows[i]
-            if m.direction <> 0 and (direction < m.direction or direction > m.direction) 'Animation reversed direction
+            if m.direction <> 0 and direction <> m.direction 'Animation reversed direction
                 shadow.moveLeft = RlModulo(shadow.moveCurrent, shadow.movePer) 'Reverse movement to the nearest previous item
                 shadow.moveTotal = shadow.movePer
                 'shadow.moveCurrent = shadow.moveTotal - shadow.moveLeft 'Reverse movement to the nearest previous item
@@ -209,7 +209,7 @@ function RlCarousel_Update(delta as Float) as Boolean
     
         shadow = m.visibleShadows[0]
         
-        if shadow.moveCurrent >= shadow.movePer 'I.e. moved past a single unit
+        if shadow.moveCurrent >= shadow.movePer and not m.reversed'I.e. moved past a single unit
             shadow.moveCurrent = 0 'Reset the position past a single unit to 0
             
             'Update shadow indices
@@ -271,14 +271,21 @@ end function
 
 'Set the images to be shown on the visible shadows
 function RlCarousel_SetImages() as Void
+	fs = CreateObject("roFileSystem")
     max = m.visibleShadows.Count() - 1 
     for i = 0 to max
         shadow = m.visibleShadows[i] 'Get the shadow to overlay the image on
-        image = RlImage(m.images[shadow.index]) 'Build an image from the path corresponding to the shadow's index
-        image.x = shadow.x + shadow.offsetX
-        image.y = shadow.y + shadow.offsetY
-        image.width = shadow.width - 2 * shadow.offsetX
-        image.height = shadow.height - 2 * shadow.offsetY
+        path = m.images[shadow.index]
+        if path <> invalid and fs.Exists(path) 
+        	image = RlImage(path) 'Build an image from the path corresponding to the shadow's index if it exists
+        	image.x = shadow.x + shadow.offsetX
+	        image.y = shadow.y + shadow.offsetY
+	        image.width = shadow.width - 2 * shadow.offsetX
+	        image.height = shadow.height - 2 * shadow.offsetY
+    	else
+    		image = invalid
+    	end if
+        
         m.visibleImages[i] = image 'Set the image to be the correct visible image
     end for
 end function

@@ -28,7 +28,6 @@ function RlBitmapManager_GetBitmap(path as String) as Dynamic
         print "Ran out of memory for bitmap, flushing all existing bitmaps"
         m.Clear()
         m.bitmaps[path] = CreateObject("roBitmap", path)
-        
         print m.bitmaps
         bitmap = m.bitmaps[path]
     end if

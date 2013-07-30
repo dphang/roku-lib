@@ -51,5 +51,5 @@ end function
 
 'Deletes the reference to the associated roBitmap (may also deallocate other images referencing the same bitmap)
 function RlImage_Deallocate() as Void
-    RlBitmapManager().ClearBitmap(m.path)
+    m.bitmapManager.ClearBitmap(m.path)
 end function
