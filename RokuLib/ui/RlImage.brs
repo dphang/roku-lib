@@ -5,12 +5,11 @@
 '@param width the width
 '@param height the height
 '@return an Image object
-function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic, width as Integer, height as Integer) as Object
+function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic) as Object
     this = {
         type: "RlImage"
-        bitmapManager: m.bitmapManager
-        bitmap: invalid
         path: path
+        bitmapManager: m.bitmapManager
         x: x
         y: y
         width: width
@@ -29,15 +28,15 @@ end function
 '@return true if successful
 function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
     'Lazy allocation
-    m.bitmap = m.BitmapManager.GetBitmap(m.path)
+    bitmap = m.bitmapManager.GetBitmap(m.path)
     
     'Draw image
-    if m.width <> m.bitmap.GetWidth() or m.height <> m.bitmap.GetHeight() 'Scaled draw
-        scaleX = m.width / m.bitmap.GetWidth()
-        scaleY = m.height / m.bitmap.GetHeight()
-        success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, m.bitmap)
+    if m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight() 'Scaled draw
+        scaleX = m.width / bitmap.GetWidth()
+        scaleY = m.height / bitmap.GetHeight()
+        success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, bitmap)
     else 'Normal draw
-        success = component.DrawObject(m.x, m.y, m.bitmap)
+        success = component.DrawObject(m.x, m.y, bitmap)
     end if
     
     'Deallocate if on conservative mode
@@ -45,12 +44,10 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         m.Deallocate()
     end if
     
-    m.bitmap = invalid
-    
     return success
 end function
 
 'Deletes the reference to the associated roBitmap (may also deallocate other images referencing the same bitmap)
 function RlImage_Deallocate() as Void
-    m.bitmapManager.ClearBitmap(m.path)
+    RlBitmapManager().ClearBitmap(m.path)
 end function
