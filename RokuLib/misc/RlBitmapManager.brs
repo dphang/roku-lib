@@ -1,4 +1,3 @@
-<<<<<<< HEAD:RokuLib/misc/RlBitmapManager.brs
 'Bitmap manager which manages and allocates bitmaps as necessary. Also ensures duplicate bitmaps are not created
 '(multiple bitmaps created from the same path)
 '@return a RlBitmapManager object
