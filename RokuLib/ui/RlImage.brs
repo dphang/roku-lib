@@ -44,6 +44,8 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         m.Deallocate()
     end if
     
+    bitmap = invalid
+    
     return success
 end function
 

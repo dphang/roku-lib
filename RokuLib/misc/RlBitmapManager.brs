@@ -25,8 +25,12 @@ function RlBitmapManager_GetBitmap(path as String) as Dynamic
     bitmap = m.bitmaps[path]
     
     if bitmap = invalid
-        print "Bitmap could not be initialized"
-        return invalid
+        print "Ran out of memory for bitmap, flushing all existing bitmaps"
+        m.Clear()
+        m.bitmaps[path] = CreateObject("roBitmap", path)
+        
+        print m.bitmaps
+        bitmap = m.bitmaps[path]
     end if
     
     return bitmap
@@ -43,5 +47,8 @@ end function
 
 'Clears all allocated roBitmaps
 function RlBitmapManager_Clear() as Void
-    m.bitmaps.Clear()
+	for each bitmap in m.bitmaps
+		bitmap = invalid
+	end for
+	m.bitmaps = {}
 end function
