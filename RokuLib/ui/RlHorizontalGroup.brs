@@ -25,8 +25,7 @@ end function
 'Adds a new UI element to the end of this RlHorizontalGroup
 '@param element the element to be added
 function RlHorizontalGroup_Push(element as Object) as Void
-    count = m.elements.Count()
-    if count <> 0
+    if m.elements.Count() <> 0
         previous = m.elements.Peek()
         element.x = previous.x + previous.width + m.offset
     else

@@ -5,7 +5,7 @@
 '@param width the width
 '@param height the height
 '@return an Image object
-function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic) as Object
+function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic, niceScaling = false as Boolean) as Object
     this = {
         type: "RlImage"
         path: path
@@ -14,6 +14,7 @@ function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic,
         y: y
         width: width
         height: height
+        niceScaling: niceScaling
         
         Draw: RlImage_Draw
         Deallocate: RlImage_Deallocate
@@ -28,7 +29,11 @@ end function
 '@return true if successful
 function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
     'Lazy allocation
-    bitmap = m.bitmapManager.GetBitmap(m.path)
+    if m.niceScaling
+    	bitmap = m.bitmapManager.GetScaledBitmap(m.path, m.width, m.height, 1)
+    else
+		bitmap = m.bitmapManager.GetBitmap(m.path)
+	end if
     
     'Draw image
     if m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight() 'Scaled draw
@@ -43,8 +48,6 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
     if conservative
         m.Deallocate()
     end if
-    
-    bitmap = invalid
     
     return success
 end function

@@ -20,7 +20,6 @@ function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object
         advance: false
         direction: 0
         index: 0
-        time: 0
         animate: animate
         
         'Constants
@@ -32,7 +31,7 @@ function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object
         Move: RlCarousel_Move
         Draw: RlCarousel_Draw
         Update: RlCarousel_Update
-        SetImages: RlCarousel_SetImages
+        UpdateImages: RlCarousel_UpdateImages
     }
     
     this.Init()
@@ -89,9 +88,7 @@ function RlCarousel_Init() as Void
     
     m.wrapLeftX = actualX - m.VISIBLE_IMAGES[0] * smallWidth
     m.wrapRightX = actualX + bigWidth + m.VISIBLE_IMAGES[1] * smallWidth 
-    
-    'Set initial images
-    m.SetImages()
+
 end function
 
 'Set this carousel to start moving to the next item (right) or previous item (left).
@@ -179,7 +176,8 @@ end function
 '@param delta the change in time value
 '@return true if updated
 function RlCarousel_Update(delta as Float) as Boolean
-    m.time = m.time + delta
+    updated = false
+    
     if m.moving
         'print "RlCarousel.Update()"
         max = m.visibleShadows.Count() - 1
@@ -200,10 +198,8 @@ function RlCarousel_Update(delta as Float) as Boolean
                 
                 m.moving = true
             else
-                if m.time >= 5 'm.ANIMATION_TIME 
-                    m.moving = false
-                    exit for
-                end if
+                m.moving = false
+                exit for
             end if
         end for          
     
@@ -211,12 +207,6 @@ function RlCarousel_Update(delta as Float) as Boolean
         
         if shadow.moveCurrent >= shadow.movePer and not m.reversed'I.e. moved past a single unit
             shadow.moveCurrent = 0 'Reset the position past a single unit to 0
-            
-            'Update shadow indices
-            for i = 0 to max
-                shadow = m.visibleShadows[i]
-                print "Shadow index: " + tostr(shadow.index)
-            end for
             
             'Update carousel index and clamp
             m.index = m.index + m.direction
@@ -241,23 +231,20 @@ function RlCarousel_Update(delta as Float) as Boolean
             temp.x = m.visibleShadows[0].x - temp.width 'Move it to the position before the leftmost shadow
             temp.index = m.visibleShadows[0].index - 1
             for i = max to 1 step -1
-                print "Temp: " tostr(i)
                 m.visibleShadows[i] = m.visibleShadows[i - 1]
             end for
             m.visibleShadows[0] = temp
         end if    
         
-        'Set images
-        m.SetImages()
         
-        return true    
+        updated = true    
     else    
         m.reversed = false
-        m.direction = 0
-        return false
     end if
     
-    return false
+    if m.UpdateImages() then updated = true
+    
+    return updated
 end function
 
 'Draws this RlCarousel to the specified component.
@@ -270,22 +257,30 @@ function RlCarousel_Draw(component as Object) as Boolean
 end function
 
 'Set the images to be shown on the visible shadows
-function RlCarousel_SetImages() as Void
+function RlCarousel_UpdateImages() as Boolean
 	fs = CreateObject("roFileSystem")
     max = m.visibleShadows.Count() - 1 
+    updated = false
     for i = 0 to max
         shadow = m.visibleShadows[i] 'Get the shadow to overlay the image on
-        path = m.images[shadow.index]
-        if path <> invalid and fs.Exists(path) 
-        	image = RlImage(path) 'Build an image from the path corresponding to the shadow's index if it exists
-        	image.x = shadow.x + shadow.offsetX
-	        image.y = shadow.y + shadow.offsetY
-	        image.width = shadow.width - 2 * shadow.offsetX
-	        image.height = shadow.height - 2 * shadow.offsetY
-    	else
-    		image = invalid
-    	end if
+        visibleImage = m.visibleImages[i]
         
-        m.visibleImages[i] = image 'Set the image to be the correct visible image
+        image = invalid
+        path = m.images[shadow.index]
+        if m.ANIMATION_TIME > 0.1
+            if fs.Exists(path) 
+                image = RlImage(path) 'Build an image from the path corresponding to the shadow's index if it exists
+                image.x = shadow.x + shadow.offsetX
+                image.y = shadow.y + shadow.offsetY
+                image.width = shadow.width - 2 * shadow.offsetX
+                image.height = shadow.height - 2 * shadow.offsetY
+                image.niceScaling = true
+                updated = true
+            end if
+        end if
+        
+        m.visibleImages[i] = image
     end for
+    
+    return updated
 end function

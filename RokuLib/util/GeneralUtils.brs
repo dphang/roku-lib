@@ -656,3 +656,14 @@ Function validateParam(param As Object, paramType As String, functionName As Str
     print "invalid parameter of type "; type(param); " for "; paramType; " in function "; functionName
     return false
 End Function
+
+'Returns a copy of the specified array
+function ArrayCopy(array as Object) as Object
+    newArray = []
+    max = array.Count() - 1
+    for i = 0 to max
+        newArray[i] = array[i]
+    end for
+   
+   return newArray
+end function
