@@ -13,7 +13,7 @@ function RlJSON_Set(json as String) as Void
     m.json = json
 end function
 
-function RlJson_Parse() as Void
+function RlJson_Parse() as Dynamic
     if m.json.len() > 0
     
     end if

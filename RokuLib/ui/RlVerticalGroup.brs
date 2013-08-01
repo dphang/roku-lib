@@ -17,6 +17,7 @@ function RlVerticalGroup(offset as Integer, x as Integer, y as Integer) as Objec
         Clear: RlVerticalGroup_Clear
         Count: RlVerticalGroup_Count
         Draw: RlVerticalGroup_Draw
+        Set: RlVerticalGroup_Set
     }
     
     return this
@@ -50,6 +51,19 @@ function RlVerticalGroup_Append(elements as Object) as Void
     end for
 end function
 
+'Sets the position of all elements.
+function RlVerticalGroup_Set() as Void
+    max = m.elements.Count() - 1
+    offset = 0
+    for i = 0 to max
+    	element = m.elements[i]
+    	element.y = m.y + offset
+    	element.x = m.x
+    	
+    	offset = offset + element.width + m.offset 
+    end for
+end function
+
 'Clears this RlVerticalGroup
 function RlVerticalGroup_Clear() as Void
     m.elements.Clear()
@@ -64,5 +78,6 @@ end function
 '@param component a roScreen/roBitmap/roRegion object
 '@return true if successful
 function RlVerticalGroup_Draw(component as Object) as Boolean
+	if m.x <> m.elements[0].x or m.y <> m.elements[0].y then m.Set()
     return RlDrawAll(m.elements, component)
 end function

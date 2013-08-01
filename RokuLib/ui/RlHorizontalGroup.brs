@@ -17,6 +17,7 @@ function RlHorizontalGroup(offset = 0 as Integer, x = 0 as Integer, y = 0 as Int
         Clear: RlHorizontalGroup_Clear
         Count: RlHorizontalGroup_Count
         Draw: RlHorizontalGroup_Draw
+        Set: RlHorizontalGroup_Set
     }
     
     return this
@@ -59,16 +60,22 @@ function RlHorizontalGroup_Count() as Integer
     return m.elements.Count()
 end function
 
-'Sets this RlHorizontalGroup based on its parameters. Call this after setting some x, y, or offset
+'Sets the position of all elements.
 function RlHorizontalGroup_Set() as Void
-    elements = m.elements
-    m.elements = []
-    m.Append(elements)
+    max = m.elements.Count() - 1
+    offset = 0
+    for i = 0 to max
+    	element = m.elements[i]
+    	element.x = m.x + offset
+    	element.y = m.y
+    	offset = offset + element.width + m.offset 
+    end for
 end function
 
 'Draws this RlHorizontalGroup to the specified component
 '@param component a roScreen/roBitmap/roRegion object
 '@return true if successful
 function RlHorizontalGroup_Draw(component as Object) as Boolean
+	if m.x <> m.elements[0].x or m.x <> m.elements[0].y then m.Set() 'E.g. this group has changed x or y
     return RlDrawAll(m.elements, component)
 end function

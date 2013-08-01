@@ -5,7 +5,7 @@
 '@param width the width
 '@param height the height
 '@return an Image object
-function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic, niceScaling = false as Boolean) as Object
+function RlImage(path as String, x as Integer, y as Integer, width as Integer, height as Integer, niceScaling = false as Boolean) as Object
     this = {
         type: "RlImage"
         path: path
@@ -18,6 +18,7 @@ function RlImage(path as String, x = invalid as Dynamic, y = invalid as Dynamic,
         
         Draw: RlImage_Draw
         Deallocate: RlImage_Deallocate
+        Copy: RlImage_Copy
     }
     
     return this
@@ -55,4 +56,9 @@ end function
 'Deletes the reference to the associated roBitmap (may also deallocate other images referencing the same bitmap)
 function RlImage_Deallocate() as Void
     m.bitmapManager.ClearBitmap(m.path)
+end function
+
+'@return a copy of this RlImage (useful if you need to use multiple images in different areas)
+function RlImage_Copy() as Object
+	return RlImage(m.path, m.x, m.y, m.width, m.height, m.niceScaling)
 end function

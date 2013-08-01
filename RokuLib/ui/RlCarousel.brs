@@ -269,12 +269,11 @@ function RlCarousel_UpdateImages() as Boolean
         path = m.images[shadow.index]
         if m.ANIMATION_TIME > 0.1
             if fs.Exists(path) 
-                image = RlImage(path) 'Build an image from the path corresponding to the shadow's index if it exists
-                image.x = shadow.x + shadow.offsetX
-                image.y = shadow.y + shadow.offsetY
-                image.width = shadow.width - 2 * shadow.offsetX
-                image.height = shadow.height - 2 * shadow.offsetY
-                image.niceScaling = true
+                x = shadow.x + shadow.offsetX
+                y = shadow.y + shadow.offsetY
+                width = shadow.width - 2 * shadow.offsetX
+                height = shadow.height - 2 * shadow.offsetY
+                image = RlImage(path, x, y, width, height, true) 'Build an image from the path corresponding to the shadow's index if it exists
                 updated = true
             end if
         end if
