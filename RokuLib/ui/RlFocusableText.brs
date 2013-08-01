@@ -4,7 +4,7 @@
 '@param rgba1 the default color
 '@param rgba1 the focused color
 '@return a RlFocusableText object
-function RlFocusableText(text as String, font as Object, rgba1 as Integer, rgba2 as Integer, x = invalid, y = invalid) as Object
+function RlFocusableText(text as String, font as Object, rgba1 as Integer, rgba2 as Integer, x = 0 as Integer, y = 0 as Integer) as Object
     this = {
         defaultText: RlText(text, font, rgba1, x, y)
         focusedText: RlText(text, font, rgba2, x, y)

@@ -5,8 +5,11 @@
 '@param y the y coordinate
 '@param width the width if known. Otherwise, the width will only be iniialized when the bitmap is first allocated.
 '@param height the height if known. Otherwise, the height will only be iniialized when the bitmap is first allocated.
-function RlFocusableImage(defaultBitmap as String, focusedBitmap as String, x = invalid as Dynamic, y = invalid as Dynamic, width = invalid as Dynamic, height = invalid as Dynamic) as Object
+function RlFocusableImage(defaultBitmap as String, focusedBitmap as String, x as Integer, y as Integer, width as Integer, height as Integer) as Object
     this = {
+    	defaultBitmap: defaultBitmap
+    	focusedBitmap: focusedBitmap
+    	
         defaultImage: RlImage(defaultBitmap, x, y, width, height)
         focusedImage: RlImage(focusedBitmap, x, y, width, height)
         x: x
@@ -17,6 +20,7 @@ function RlFocusableImage(defaultBitmap as String, focusedBitmap as String, x = 
         focused: false
         
         Draw: RlFocusableImage_Draw
+        Copy: RlFocusableImage_Copy
     }
     
     return this
@@ -44,4 +48,8 @@ function RlFocusableImage_Draw(component as Object) as Boolean
     end if
     
     return success
+end function
+
+function RlFocusableImage_Copy() as Object
+	return RlFocusableImage(m.defaultBitmap, m.focusedBitmap, m.x, m.y, m.width, m.height)
 end function
