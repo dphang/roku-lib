@@ -14,6 +14,8 @@ function RlImage(path as String, x as Integer, y as Integer, width as Integer, h
         y: y
         width: width
         height: height
+        origWidth: width
+        origHeight: height
         niceScaling: niceScaling
         
         Draw: RlImage_Draw
@@ -37,13 +39,14 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
 	end if
     
     'Draw image
-    if m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight() 'Scaled draw
+    if not m.niceScaling and (m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight()) 'Scaled draw
         scaleX = m.width / bitmap.GetWidth()
         scaleY = m.height / bitmap.GetHeight()
-        success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, bitmap)
-    else 'Normal draw
+		success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, bitmap)
+    else 'Normal draw or nice scaling draw (bitmap returned already at correct width and height)
         success = component.DrawObject(m.x, m.y, bitmap)
     end if
+    
     
     'Deallocate if on conservative mode
     if conservative

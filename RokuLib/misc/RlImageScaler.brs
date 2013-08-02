@@ -1,11 +1,11 @@
 'Scaling utilities.
 
-'Hack-ish method to get a scaled image, both bilinearly and by k nearest neighbor. For some reason the Roku 1 does not support
+'Hack-ish method to get a scaled image from existing bitmap using bilinear algorithm. For some reason the Roku 1 does not support
 'Bilinear scaling from roRegion to roScreen, only roRegion to roRegion
-function RlGetScaledImage(path as String, width as Integer, height as Integer, scaleMode = 0 as Integer, alphaEnable = false as Boolean) as Object
+function RlGetScaledImage(path as String, width as Integer, height as Integer, scaleMode = 1 as Integer) as Object
     bmp1 = CreateObject("roBitmap", path)
     if bmp1 = invalid then return invalid
-    bmp2 = CreateObject("roBitmap", {width: width, height: height, alphaEnable: alphaEnable})
+    bmp2 = CreateObject("roBitmap", {width: width, height: height, alphaEnable: false})
     if bmp2 = invalid then return invalid
     
     'Calculate original width and height

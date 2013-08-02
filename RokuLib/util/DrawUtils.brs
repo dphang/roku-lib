@@ -6,9 +6,10 @@
 '@return true if successful
 function RlDrawAll(array as Object, component as Object) as Boolean
     max = array.Count() - 1
+    success = true
     for i = 0 to max
         item = array[i]
-        if item <> invalid and not item.Draw(component) then return false
+        if item <> invalid and not item.Draw(component) then success = false
     end for
-    return true
+    return success
 end function

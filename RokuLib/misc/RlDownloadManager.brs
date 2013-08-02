@@ -21,10 +21,13 @@ end function
 function RlDownloadManager_Download(url as String) as void
     name = GetNameFromUrl(url)
     if not m.requests.DoesExist(name)
-        request = CreateObject("roUrlTransfer")
-        request.SetUrl(url)
-        path = GetPathFromUrl(url)
-        request.AsyncGetToFile(path)
+    	request = invalid
+    	while request = invalid
+	        request = CreateObject("roUrlTransfer")
+	        request.SetUrl(url)
+	        path = GetPathFromUrl(url)
+	        request.AsyncGetToFile(path)
+        end while
         m.requests[name] = request
     end if
 end function

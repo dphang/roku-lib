@@ -4,11 +4,13 @@
 function RlBitmapManager() as Object
     this = {
         bitmaps: {}
+        scaledBitmaps: {}
         
         GetBitmap: RlBitmapManager_GetBitmap
         GetScaledBitmap: RlBitmapManager_GetScaledBitmap
         ClearBitmap: RlBitmapManager_ClearBitmap
         Clear: RlBitmapManager_Clear
+        ClearScaled: RlBitmapManager_ClearScaled
     }
         
     return this
@@ -43,38 +45,21 @@ end function
 '@param scaleMode an integer representing how this image should be initially scaled. 0 = k nearest neighbor. 1 = bilinear scaling.
 '@return a roBitmap object
 function RlBitmapManager_GetScaledBitmap(path as String, width as Integer, height as Integer, scaleMode as Integer) as Dynamic
-    if not m.bitmaps.DoesExist(path)
-        m.bitmaps[path] = RlGetScaledImage(path, width, height, scaleMode)
-    end if
-    
-    bitmap = m.bitmaps[path]
-    
-    if bitmap = invalid
+    key = path + "," + tostr(width) + "," + tostr(height)
+    if not m.scaledBitmaps.DoesExist(key)
+    	m.scaledBitmaps[key] = RlGetScaledImage(path, width, height)
+	end if
+	
+	scaledBitmap = m.scaledBitmaps[key]
+	
+    if scaledBitmap = invalid
         print "Ran out of memory for scaled bitmap, flushing all existing bitmaps"
-        m.Clear()
-        m.bitmaps[path] = RlGetScaledImage(path, width, height, scaleMode)
-        bitmap = m.bitmaps[path]
+        m.ClearScaled()
+        m.scaledBitmaps[key] = RlGetScaledImage(path, width, height)
+        scaledBitmap = m.scaledBitmaps[key]
     end if
     
-    return bitmap
-end function
-
-function RlBitmapManager_GetBilinearBitmap(path as String) as Dynamic
-    if not m.bitmaps.DoesExist(path)
-        m.bitmaps[path] = CreateObject("roBitmap", path)
-    end if
-    
-    bitmap = m.bitmaps[path]
-    
-    if bitmap = invalid
-        print "Ran out of memory for bitmap, flushing all existing bitmaps"
-        m.Clear()
-        m.bitmaps[path] = CreateObject("roBitmap", path)
-        print m.bitmaps
-        bitmap = m.bitmaps[path]
-    end if
-    
-    return bitmap
+    return scaledBitmap
 end function
 
 'Clears any roBitmap object allocated for the specified path
@@ -88,8 +73,10 @@ end function
 
 'Clears all allocated roBitmaps
 function RlBitmapManager_Clear() as Void
-	for each bitmap in m.bitmaps
-		bitmap = invalid
-	end for
 	m.bitmaps = {}
+end function
+
+'Clears all allocated scaled bitmaps
+function RlBitmapManager_ClearScaled() as Void
+	m.scaledBitmaps = {}
 end function

@@ -4,6 +4,7 @@ function RlSpinner(path, x, y, width, height, rotationPeriod = 0.5 as Float) as 
         image: RlRotatableImage(path, x, y, width, height)
         angle: 0.0
         rotationPeriod: rotationPeriod 'How fast it takes, in seconds to make one full rotation
+        visible: true
         
         Draw: RlSpinner_Draw
         Update: RlSpinner_Update
@@ -13,7 +14,11 @@ function RlSpinner(path, x, y, width, height, rotationPeriod = 0.5 as Float) as 
 end function
 
 function RlSpinner_Draw(component as Object) as Boolean
-    return m.image.Draw(component)
+    if m.visible
+    	return m.image.Draw(component)
+	else
+		return true
+	end if
 end function
 
 function RlSpinner_Update(delta as Float) as Void
