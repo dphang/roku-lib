@@ -11,7 +11,27 @@ Using ``RokuLib`` with Eclipse is recommended since you'll have access to useful
 
 ##Components
 
-###Image Carousel
+###RlImage
+
+An object that stores an image path with x, y coordinates, as well as width/height. This is useful if you want to draw images but don't want to have to remember what their x, y coordinates are. Examples: static logos, UI elements. This image can be scaled both by the nearest neighbor algorithm or bilinearly.
+
+###RlFocusableImage
+
+An object that stores two RlImages: one to show when focused, and one to show by default.
+
+###RlRotatableImage
+
+Same as an RlImage, though the image can be rotated by an angle (though not scaled). Note that the RokuSDK's function DrawRotatedObject() rotates about the top-left coordinate; this object modifies that to use the image's center points. You can use this for creating rotating loading indicators.
+
+###RlTextArea
+
+Represents text that should fit in a rectangle. This component automatically calculates how text should be rendered based on the text supplied (intelligently splitting the text into lines that do not exceed the width and height). Additionally, if a full word cannot fit on the current line, it is placed on the next line instead. This supports left, center, and right alignment. By default, if there is too much text to fit, ellipses (...) are placed at the end.
+
+###RlText
+
+Represents text at some x, y position. Unlike RlTextArea, this does not try to fit the text in some rectangle. This is a better choice (read: less expensive) if the text you want to render is predefined.
+
+###RlCarousel (Image Carousel)
 
 There's a simple (animated) 2D image carousel you can use for displaying show images (think of it as a more basic Apple coverflow). I'm still working on optimizing its performance. Unfortunately, the image carousel is really slow unless one is on the Roku 2 or higher
 
