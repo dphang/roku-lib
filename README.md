@@ -31,4 +31,6 @@ I've written a function to get a bilinearly scaled bitmap using ``roRegion`` to 
 
 ###Bitmap managing
 
-Roku developers know that ``roBitmaps`` are expensive to both create and store in memory (on the Roku 1, about 50-100 ms depending on bitmap dimensions). I've used lazy allocation and a manager to help with this: bitmaps are only allocated when they are needed (e.g. for a draw call). In addition, bitmap references are not stored in ``RlImage`` objects; they are stored in ``RlBitmapManager``. Hopefully this makes deallocating them easier, because you only have to call ``Clear()`` in ``RlBitmapManager``.
+Roku developers know that ``roBitmaps`` are expensive to both create and store in memory (on the Roku 1, about 50-100 ms depending on bitmap dimensions). I've used lazy allocation and a manager to help with this: bitmaps are only allocated when they are needed (e.g. for a draw call). In addition, bitmap references are not stored in ``RlImage`` objects; they are stored in ``RlBitmapManager``. Hopefully this makes deallocating them easier, because you only have to call ``Clear()`` in ``RlBitmapManager``. 
+
+This is useful especially if you want screens to stay in memory, but not their bitmaps (for example, if you have different screens for series listings and episode listings), then you'd call ``Clear()``. Or, if you create too many bitmaps and run out of memory, then you could clear bitmaps you don't want (perhaps using an LRU algorithm - though this has not been implemented yet).
