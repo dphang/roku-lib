@@ -35,13 +35,21 @@ Represents text at some x, y position. Unlike RlTextArea, this does not try to f
 
 There's a simple (animated) 2D image carousel you can use for displaying show images (think of it as a more basic Apple coverflow). I'm still working on optimizing its performance. Unfortunately, the image carousel is really slow unless one is on the Roku 2 or higher
 
+###RlHorizontalGroup/RlVerticalGroup
+
+These group components allow you to group components together, horizontally or vertically and with an offset. This is useful for creating menus of multiple icons at the same x or y position. Simply create a Group component, push them to the group, and you only need to call Draw() on the RlHorizontalGroup or RlVerticalGroup.
+
+###RlButton
+
+Represents a button with text centered on it. This is useful is you want to create clickable buttons (e.g. login, select, cancel, etc.)
+
 ##Utilities
 
 ###Math
 There are several math utilities not native to the Roku SDK. Some functionality includes:
 
--Modulo
--Ceiling/floor
+- Modulo
+- Ceiling/floor
 
 ###Image scaling
 
