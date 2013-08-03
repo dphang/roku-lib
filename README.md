@@ -1,7 +1,7 @@
 RokuLib
 =======
 
-Lightweight library for making Roku UI development easier, especially if using the ``roScreen`` component. Currently incomplete, but hopefully I will have most of the library done by the end of August 2013. Right now this supports loading images, buttons, horizontal/vertical control groups, etc. In addition, there is a simple 2D carousel that can support animations.
+Lightweight library for making Roku UI development easier, especially if using the ``roScreen`` component. Currently incomplete, but hopefully I will have most of the library done by the end of August 2013.
 
 ##Installation
 
@@ -10,6 +10,43 @@ To use this library simply copy the contents of ``RokuLib`` into your source dir
 Using ``RokuLib`` with Eclipse is recommended since you'll have access to useful documentation written in Javadoc style.
 
 ##Components
+
+Most components are UI components, meaning that they have some Draw(screen) function. By creating these components, you don't have to worry about the x, y coordinates once they're set: simply call Draw(screen) on each component you want to draw. This way, you can also create an array of drawable objects (most of these components) and simply call Draw() on each of them. Note that Draw() returns true or false depending on whether it could draw to a screen (99.9% of the time, this will return true). So you could make your own Draw() return nothing.
+
+Animated components (such as ``RlSpinner`` or ``RlCarousel``) also have an Update(delta) function, which allows for framerate independent movement/rotation/animation. This can be used to construct complete screens. For example, if your screen has both an ``RlCarousel`` and ``RlSpinner`` object, you can create an Update() function that will call Update() on each of these updateable components.
+
+Because the Roku players don't have very high performance to begin with, it is not recommended to always be drawing components. First, unlike a game, most UI components/images are static until the user does osmething. Second, drawing all screen elements continuously is very expensive.
+
+One strategy is: only draw all components to a ``roScreen`` if something was updated. See the below code for an example, if you have a carousel and a spinner
+
+```
+function Update(msg as Dynamic, delta as Float) as Boolean
+  'Update content based on event message received
+  'Do stuff
+  
+  'Update spinner if something is loading
+  if m.loading then m.spinner.Update(delta)
+  if not m.carousel.Update(delta) then return false
+  return true
+end function
+
+function Draw(screen as Object) as Void
+  m.carousel.Draw(screen)
+  m.spinner.Draw(screen)
+end function
+```
+
+Then, in another while loop, you could do:
+
+```
+while true:
+  msg = wait(1, screen.GetPort())
+  'Calculate delta
+  delta = ...
+  
+  if m.Update(msg, delta) then m.Draw(screen) 'Only draw if something was updated
+end while
+```
 
 ###RlImage
 
@@ -21,7 +58,7 @@ An object that stores two RlImages: one to show when focused, and one to show by
 
 ###RlRotatableImage
 
-Same as an RlImage, though the image can be rotated by an angle (though not scaled). Note that the RokuSDK's function DrawRotatedObject() rotates about the top-left coordinate; this object modifies that to use the image's center points. You can use this for creating rotating loading indicators.
+Same as an RlImage, though the image can be rotated by an angle (though not scaled). Note that the RokuSDK's function DrawRotatedObject() rotates about the top-left coordinate; this object modifies that to use the image's center points. You can use this for creating rotating loading indicators (see also ``RlSpinner``) which does this.
 
 ###RlTextArea
 
