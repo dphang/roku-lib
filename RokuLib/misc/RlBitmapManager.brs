@@ -27,12 +27,12 @@ function RlBitmapManager_GetBitmap(path as String) as Dynamic
     
     bitmap = m.bitmaps[path]
     
-    if bitmap = invalid
-        print "Ran out of memory for bitmap, flushing all existing bitmaps"
+    while bitmap = invalid
+        print "Ran out of memory for bitmap, flushing a bitmap"
         m.Clear()
         m.bitmaps[path] = CreateObject("roBitmap", path)
         bitmap = m.bitmaps[path]
-    end if
+    end while
     
     return bitmap
 end function
@@ -46,18 +46,19 @@ end function
 '@return a roBitmap object
 function RlBitmapManager_GetScaledBitmap(path as String, width as Integer, height as Integer, scaleMode as Integer) as Dynamic
     key = path + "," + tostr(width) + "," + tostr(height)
+    bitmap = m.GetBitmap(path)
     if not m.scaledBitmaps.DoesExist(key)
-    	m.scaledBitmaps[key] = RlGetScaledImage(path, width, height)
+    	m.scaledBitmaps[key] = RlGetScaledImage(bitmap, width, height)
 	end if
 	
 	scaledBitmap = m.scaledBitmaps[key]
 	
-    if scaledBitmap = invalid
+    while scaledBitmap = invalid
         print "Ran out of memory for scaled bitmap, flushing all existing bitmaps"
         m.ClearScaled()
-        m.scaledBitmaps[key] = RlGetScaledImage(path, width, height)
+        m.scaledBitmaps[key] = RlGetScaledImage(bitmap, width, height)
         scaledBitmap = m.scaledBitmaps[key]
-    end if
+    end while
     
     return scaledBitmap
 end function
@@ -71,12 +72,12 @@ function RlBitmapManager_ClearBitmap(path as String) as Void
     end if
 end function
 
-'Clears all allocated roBitmaps
+'Clears a random allocated roBitmaps
 function RlBitmapManager_Clear() as Void
-	m.bitmaps = {}
+    m.bitmaps.Clear()
 end function
 
-'Clears all allocated scaled bitmaps
+'Clears a random allocated scaled bitmaps
 function RlBitmapManager_ClearScaled() as Void
-	m.scaledBitmaps = {}
+    m.scaledBitmaps.Clear()
 end function

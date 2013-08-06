@@ -126,7 +126,6 @@ function RlCarousel_Move(direction as Integer) as Void
                 m.reversed = true  
             else if not m.moving' Continuing in same direction, or new direction
             	m.reversed = false
-				print "Shadow.x: " + tostr(shadow.x)
                 if shadow.index = m.index 'm.centerX 'Shadow is the big shadow
                     if direction < 0
                         shadow.moveTotal = bigWidth
@@ -142,7 +141,6 @@ function RlCarousel_Move(direction as Integer) as Void
                         shadow.moveTotal = smallWidth
                     end if
                 end if
-                print "Shadow.movetotal: " + tostr(shadow.moveTotal)
 
 
                 if m.direction = 0 'Starting from 0
