@@ -1,29 +1,36 @@
-'Bilinear image scaler for raw bitmap data.
-function BilinearScale(pixels as Object, width as Float, height as Float, newWidth as Float, newHeight as Float) as Object
-    'Get the dimensions of the original pixel array
-    width = pixels.Count()
-    height = pixels[0].Count()
+'Calculates an estimated size of a bitmap, based on Roku's 32-bit per pixel memory usage.
+function RlBitmapSize(bitmap as Object) as Integer
+    if not validateParam(bitmap, "roBitmap")
+        print "Argument is not of type roBitmap"
+        return -1
+    end if
+
+    return 32 * bitmap.GetWidth() * bitmap.GetHeight()
+end function
+
+'Hack-ish method to get a scaled image from existing bitmap using bilinear algorithm. For some reason the Roku 1 does not support
+'Bilinear scaling from roRegion to roScreen, only roRegion to roRegion
+function RlGetScaledImage(bmp1 as Object, width as Integer, height as Integer, scaleMode = 1 as Integer) as Object
+    if bmp1 = invalid then return invalid
+    bmp2 = CreateObject("roBitmap", {width: width, height: height, alphaEnable: false})
+    if bmp2 = invalid then return invalid
     
-    'Initialize new pixel array
-    newPixels = CreateObject("roArray", newWidth * newHeight)
-    x_ratio = width / newWidth
-    y_ratio = height / newHeight
+    'Calculate original width and height
+    origWidth = bmp1.GetWidth()
+    origHeight = bmp1.GetHeight()
     
-    offset = 0
+    'Calculate scaling factor
+    scaleX = width / origWidth
+    scaleY = height / origHeight
     
-    for i = 0 to newHeight * 4 step 4
-        for j = 0 to newWidth * 4 step 4
-            x = int(x_ratio * j)
-            y = int(y_ratio * i)
-            x_diff = (x_ratio * j) - x
-            y_diff = (y_ratio * i) - y
-            index = y * w + x
-            
-            
-            r = pixels[index]
-            g = pixels[index + 1]
-            b = pixels[index + 2]
-            a = pixels[index + 3]
-        end for
-    end for
+    'Draw from region 1 to region 2 scaled
+    rgn1 = CreateObject("roRegion", bmp1, 0, 0, origWidth, origHeight)
+    if rgn1 = invalid then return invalid
+    rgn1.SetScaleMode(scaleMode)
+    
+    rgn2 = CreateObject("roRegion", bmp2, 0, 0, width, height)
+    if rgn2 = invalid then return invalid
+    rgn2.DrawScaledObject(0, 0, scaleX, scaleY, rgn1)
+    
+    return rgn2.GetBitmap()
 end function

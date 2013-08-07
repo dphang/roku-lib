@@ -1,4 +1,4 @@
-'Bitmap manager which manages and allocates bitmaps as necessary. Also ensures duplicate bitmaps are not created
+'Bitmap manager which manages and allocates bitmaps using and LRU cache.
 '(multiple bitmaps created from the same path)
 '@return a RlBitmapManager object
 function RlBitmapManager() as Object
@@ -47,6 +47,7 @@ end function
 function RlBitmapManager_GetScaledBitmap(path as String, width as Integer, height as Integer, scaleMode as Integer) as Dynamic
     key = path + "," + tostr(width) + "," + tostr(height)
     bitmap = m.GetBitmap(path)
+    
     if not m.scaledBitmaps.DoesExist(key)
     	m.scaledBitmaps[key] = RlGetScaledImage(bitmap, width, height)
 	end if

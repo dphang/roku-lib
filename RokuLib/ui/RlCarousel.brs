@@ -290,10 +290,10 @@ function RlCarousel_UpdateImages() as Boolean
 	fs = CreateObject("roFileSystem")
     max = m.visibleShadows.Count() - 1 
     updated = false
-    if m.moving 'We don't need to use bilinear scaling if the carousel is moving, since user won't notice it
-        niceScaling = false
-    else
+    if not m.moving or m.ANIMATION_TIME = 0 'We don't need to use bilinear scaling if the carousel is moving, since user won't notice it
         niceScaling = true
+    else
+        niceScaling = false
     end if
     
     for i = 0 to max
@@ -308,7 +308,7 @@ function RlCarousel_UpdateImages() as Boolean
                 y = shadow.y + shadow.offsetY
                 width = shadow.width - 2 * shadow.offsetX
                 height = shadow.height - 2 * shadow.offsetY
-                image = RlImage(path, x, y, width, height, niceScaling or m.ANIMATION_TIME = 0) 'Build an image from the path corresponding to the shadow's index if it exists
+                image = RlImage(path, x, y, width, height, true) 'Build an image from the path corresponding to the shadow's index if it exists
                 updated = true
             end if
         end if
