@@ -88,6 +88,14 @@ There are several math utilities not native to the Roku SDK. Some functionality 
 - Modulo
 - Ceiling/floor
 
+###Sorting
+
+I've implemented insertion sort, merge sort, and quick sort. Practically, quick sort works very well even on small array sizes, so I would use that. I've benchmarked the algorithms on the Roku 3, using a 10000 member array containing pseudorandomly generated integers from 0 to 9999.
+
+Insertion sort: >30 seconds
+Merge sort: ~900 ms
+Insertion sort: ~750 ms
+
 ###Image scaling
 
 The image scaling algorithms used by the Roku aren't very good, unless bilinear scaling is used. Unfortunately, ``roBitmaps`` themselves don't support bilinearly scaled drawing to a ``roScreen``. On the newer Roku models, you must create a ``roRegion`` (think of it as a region of a bitmap) set its scaling mode to 1, then draw it to a ``roScreen``. This is even more tricky on the Roku classic models, where bilinear scaling is only supported for ``roRegion`` to ``roRegion`` draw calls.
@@ -96,6 +104,6 @@ I've written a function to get a bilinearly scaled bitmap using ``roRegion`` to 
 
 ###Bitmap managing
 
-Roku developers know that ``roBitmaps`` are expensive to both create and store in memory (on the Roku 1, about 50-100 ms depending on bitmap dimensions). I've used lazy allocation and a manager to help with this: bitmaps are only allocated when they are needed (e.g. for a draw call). In addition, bitmap references are not stored in ``RlImage`` objects; they are stored in ``RlBitmapManager``. Hopefully this makes deallocating them easier, because you only have to call ``Clear()`` in ``RlBitmapManager``. 
+Roku developers know that ``roBitmaps`` are expensive to both create and store in memory (on the Roku 1, about 50-100 ms depending on bitmap dimensions). I've used lazy allocation and a manager to help with this: bitmaps are only allocated when they are needed (e.g. for a draw call). In addition, bitmap references are not stored in ``RlImage`` objects; they are stored in ``RlBitmapManager``. Hopefully this makes deallocating them easier, because can clear them in ``RlBitmapManager``. 
 
-This is useful especially if you want screens to stay in memory, but not their bitmaps (for example, if you have different screens for series listings and episode listings), then you'd call ``Clear()``. Or, if you create too many bitmaps and run out of memory, then you could clear bitmaps you don't want (perhaps using an LRU algorithm - though this has not been implemented yet).
+Though it is currently incomplete, I'm almost done implementing an LRU byte cache - similar to the one used for Android bitmaps. This be used in conjunction with the bitmap manager to maximize memory use and reduce bitmap creation overhead.
