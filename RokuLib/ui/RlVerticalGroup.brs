@@ -8,6 +8,8 @@ function RlVerticalGroup(offset as Integer, x as Integer, y as Integer) as Objec
         offset: offset
         x: x
         y: y
+        width: 0
+        height: 0
         
         elements: []
         
@@ -55,13 +57,19 @@ end function
 function RlVerticalGroup_Set() as Void
     max = m.elements.Count() - 1
     offset = 0
+    m.width = 0
+    m.height = 0
     for i = 0 to max
     	element = m.elements[i]
     	element.y = m.y + offset
     	element.x = m.x
-    	
-    	offset = offset + element.width + m.offset 
+    	if element.Init <> invalid then element.Init()
+    	if element.Set <> invalid then element.Set()
+    	m.width = RlMax(m.width, element.width)
+    	offset = offset + element.height + m.offset 
     end for
+    
+	m.height = RlMax(offset - m.offset, 0) 'Account for last offset, also must be non-negative
 end function
 
 'Clears this RlVerticalGroup

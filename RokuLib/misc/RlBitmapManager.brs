@@ -3,7 +3,7 @@
 '@return a RlBitmapManager object
 function RlBitmapManager() as Object
     this = {
-        bitmaps: {}
+        bitmaps: RlByteCache(14080000, RlBitmapSize) 'or about 88 200 x 200 images for the Roku 1
         scaledBitmaps: {}
         
         GetBitmap: RlBitmapManager_GetBitmap
@@ -21,19 +21,12 @@ end function
 '@param path the path to an image file
 '@return a roBitmap object
 function RlBitmapManager_GetBitmap(path as String) as Dynamic
-    if not m.bitmaps.DoesExist(path)
-        m.bitmaps[path] = CreateObject("roBitmap", path)
+    if not m.bitmaps.Exists(path)
+        m.bitmaps.Set(path, CreateObject("roBitmap", path))
     end if
     
-    bitmap = m.bitmaps[path]
-    
-    while bitmap = invalid
-        print "Ran out of memory for bitmap, flushing a bitmap"
-        m.Clear()
-        m.bitmaps[path] = CreateObject("roBitmap", path)
-        bitmap = m.bitmaps[path]
-    end while
-    
+    bitmap = m.bitmaps.Get(path)
+
     return bitmap
 end function
 
@@ -46,22 +39,15 @@ end function
 '@return a roBitmap object
 function RlBitmapManager_GetScaledBitmap(path as String, width as Integer, height as Integer, scaleMode as Integer) as Dynamic
     key = path + "," + tostr(width) + "," + tostr(height)
-    bitmap = m.GetBitmap(path)
+    bitmap = m.GetBitmap(path) 'Try to get the original bitmap
     
-    if not m.scaledBitmaps.DoesExist(key)
-    	m.scaledBitmaps[key] = RlGetScaledImage(bitmap, width, height)
+    if not m.bitmaps.Exists(key)
+    	m.bitmaps.Set(key, RlGetScaledImage(bitmap, width, height))
 	end if
 	
-	scaledBitmap = m.scaledBitmaps[key]
-	
-    while scaledBitmap = invalid
-        print "Ran out of memory for scaled bitmap, flushing all existing bitmaps"
-        m.ClearScaled()
-        m.scaledBitmaps[key] = RlGetScaledImage(bitmap, width, height)
-        scaledBitmap = m.scaledBitmaps[key]
-    end while
-    
-    return scaledBitmap
+    bitmap = m.bitmaps.Get(key)
+
+    return bitmap
 end function
 
 'Clears any roBitmap object allocated for the specified path

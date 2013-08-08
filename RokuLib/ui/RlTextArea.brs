@@ -9,7 +9,7 @@
 '@param spacing a Float specifying the distance between lines. E.g. 2.0 will result in double spaced lines
 '@param align a String specifing how text should be aligned. Choices are: left, center, right
 '@param return an RlTextArea object
-function RlTextArea(text as String, font as Object, rgba as Integer, x as Integer, y as Integer, width = 2000 as Integer, height = 2000 as Integer, maxLines = 100 as Integer, spacing = 1.0 as Float, align = "left" as String) as Object
+function RlTextArea(text as String, font as Object, rgba as Integer, x as Integer, y as Integer, width = 2000 as Integer, height = invalid as Dynamic, maxLines = 100 as Integer, spacing = 1.0 as Float, align = "left" as String) as Object
     this = {
         type: "RlTextArea" 
         text: text
@@ -59,7 +59,7 @@ function TextArea_Init() as Void
     for i = 0 to m.maxLines - 1
         'Check that we aren't exceeding the maximum height. Otherwise, simply exit the for loop
         tempHeight = tempHeight + GetFontHeight(m.font)
-        if tempHeight > m.height
+        if m.height <> invalid and tempHeight > m.height
             exit for
         end if
         
@@ -90,7 +90,7 @@ function TextArea_Init() as Void
     m.textLines = []
     max = lines.Count() - 1
     for i = 0 to max
-        'Calculate correct x coordinate for alignment
+        'Calculate correct x, y coordinate for alignment
         if m.align = "center"
             tempX = m.x + (m.width - GetFontWidth(m.font, lines[i])) / 2
         else if m.align = "right"
@@ -98,6 +98,12 @@ function TextArea_Init() as Void
         else 'Default alignment is left
             tempX = m.x
         end if
+        
         m.textLines[i] = RlText(lines[i], m.font, m.rgba, tempX, m.y + i * m.spacing * GetFontHeight(m.font))
     end for
+    
+    'If height is invalid, then use the actual height for the height
+    if m.height = invalid
+    	m.height = tempHeight
+    end if
 end function

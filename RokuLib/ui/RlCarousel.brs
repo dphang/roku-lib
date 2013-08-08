@@ -308,7 +308,7 @@ function RlCarousel_UpdateImages() as Boolean
                 y = shadow.y + shadow.offsetY
                 width = shadow.width - 2 * shadow.offsetX
                 height = shadow.height - 2 * shadow.offsetY
-                image = RlImage(path, x, y, width, height, true) 'Build an image from the path corresponding to the shadow's index if it exists
+                image = RlImage(path, x, y, width, height, niceScaling) 'Build an image from the path corresponding to the shadow's index if it exists
                 updated = true
             end if
         end if

@@ -80,7 +80,7 @@ function RlQuickSort_qsort(array as Object, comparator as Dynamic, left as Integ
         store = left
         
         for i = left to right - 1
-            if comparator(array[i], pivotValue) = -1
+            if comparator(array[i], pivotValue) < 0
                 ArraySwap(array, store, i)
                 store = store + 1
             end if
@@ -107,7 +107,7 @@ function RlInsertionSort(array as Object, comparator = invalid as Dynamic) as Vo
     	temp = array[i]
     	hole = i
     	
-    	while hole > 0 and comparator(temp, array[hole - 1]) = -1
+    	while hole > 0 and comparator(temp, array[hole - 1]) < 0
     		array[hole] = array[hole - 1]
     		hole = hole - 1
     	end while

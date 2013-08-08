@@ -19,7 +19,6 @@ function RlImage(path as String, x as Integer, y as Integer, width as Integer, h
         niceScaling: niceScaling
         
         Draw: RlImage_Draw
-        Deallocate: RlImage_Deallocate
         Copy: RlImage_Copy
     }
     
@@ -30,7 +29,7 @@ end function
 '@param component a roScreen/roBitmap/roRegion object
 '@param conservative if set to true, the associated roBitmap is immediately deallocated after drawing, if possible
 '@return true if successful
-function RlImage_Draw(component as Object, conservative = false as Boolean) as Boolean
+function RlImage_Draw(component as Object) as Boolean
     'Lazy allocation
     if m.niceScaling
     	bitmap = m.bitmapManager.GetScaledBitmap(m.path, m.width, m.height, 1)
@@ -47,18 +46,7 @@ function RlImage_Draw(component as Object, conservative = false as Boolean) as B
         success = component.DrawObject(m.x, m.y, bitmap)
     end if
     
-    
-    'Deallocate if on conservative mode
-    if conservative
-        m.Deallocate()
-    end if
-    
     return success
-end function
-
-'Deletes the reference to the associated roBitmap (may also deallocate other images referencing the same bitmap)
-function RlImage_Deallocate() as Void
-    m.bitmapManager.ClearBitmap(m.path)
 end function
 
 '@return a copy of this RlImage (useful if you need to use multiple images in different areas)

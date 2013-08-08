@@ -1,17 +1,17 @@
 'Represents a focusable (whether by selection, or just highlighted) image object
-'@param defaultBitmap the path to the default bitmap
-'@param focusedBitmap the path to the focused bitmap
+'@param defaultPath the path to the default bitmap
+'@param focusedPath the path to the focused bitmap
 '@param x the x coordinate
 '@param y the y coordinate
 '@param width the width if known. Otherwise, the width will only be iniialized when the bitmap is first allocated.
 '@param height the height if known. Otherwise, the height will only be iniialized when the bitmap is first allocated.
-function RlFocusableImage(defaultBitmap as String, focusedBitmap as String, x as Integer, y as Integer, width as Integer, height as Integer) as Object
+function RlFocusableImage(defaultPath as String, focusedPath as String, x as Integer, y as Integer, width as Integer, height as Integer) as Object
     this = {
-    	defaultBitmap: defaultBitmap
-    	focusedBitmap: focusedBitmap
+    	defaultPath: defaultPath
+    	focusedPath: focusedPath
     	
-        defaultImage: RlImage(defaultBitmap, x, y, width, height)
-        focusedImage: RlImage(focusedBitmap, x, y, width, height)
+        defaultImage: RlImage(defaultPath, x, y, width, height)
+        focusedImage: RlImage(focusedPath, x, y, width, height)
         x: x
         y: y
         width: width
@@ -51,5 +51,5 @@ function RlFocusableImage_Draw(component as Object) as Boolean
 end function
 
 function RlFocusableImage_Copy() as Object
-	return RlFocusableImage(m.defaultBitmap, m.focusedBitmap, m.x, m.y, m.width, m.height)
+	return RlFocusableImage(m.defaultPath, m.focusedPath, m.x, m.y, m.width, m.height)
 end function

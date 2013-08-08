@@ -8,6 +8,8 @@ function RlHorizontalGroup(offset = 0 as Integer, x = 0 as Integer, y = 0 as Int
         offset: offset
         x: x
         y: y
+        width: 0
+        height: 0
         
         elements: []
         
@@ -29,10 +31,14 @@ function RlHorizontalGroup_Push(element as Object) as Void
     if m.elements.Count() <> 0
         previous = m.elements.Peek()
         element.x = previous.x + previous.width + m.offset
+        m.height = element.height
     else
         element.x = m.x
+        m.height = RlMax(m.height, element.height)
     end if    
     element.y = m.y
+    m.width = m.width + element.width
+    if element.Init <> invalid then element.Init() 'Reinitialize element
     m.elements.Push(element)
 end function
 
@@ -64,12 +70,19 @@ end function
 function RlHorizontalGroup_Set() as Void
     max = m.elements.Count() - 1
     offset = 0
+    m.height = 0
+    m.width = 0
     for i = 0 to max
     	element = m.elements[i]
     	element.x = m.x + offset
     	element.y = m.y
+    	if element.Init <> invalid then element.Init()
+    	if element.Set <> invalid then element.Set()
+    	m.height = RlMax(m.height, element.height)
     	offset = offset + element.width + m.offset 
     end for
+    
+    m.width = RlMax(offset - m.offset, 0) 'Account for last offset, also must be non-negative
 end function
 
 'Draws this RlHorizontalGroup to the specified component
