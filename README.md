@@ -90,11 +90,17 @@ There are several math utilities not native to the Roku SDK. Some functionality 
 
 ###Sorting
 
-I've implemented insertion sort, merge sort, and quick sort. Practically, quick sort works very well even on small array sizes, so I would use that. I've benchmarked the algorithms on the Roku 3, using a 10000 member array containing pseudorandomly generated integers from 0 to 9999.
+I've implemented insertion sort, merge sort, and quick sort, with optional comparators (default is ascending sort). Practically, quick sort works very well even on small array sizes, so I would use that unless you need a stable sort. I've benchmarked the algorithms on the Roku 3, using a 10000 member array containing pseudorandomly generated integers from 0 to 9999.
 
 Insertion sort: >30 seconds
+
 Merge sort: ~900 ms
+
 Insertion sort: ~750 ms
+
+###RlByteCache
+
+For caching objects that are expensive to create (e.g. bitmaps), I've written an LRU cache that counts by bytes rather than by items. You can have it cache by count too, if you pass in a sizeFunction that simply returns a constant. For bitmaps, use RlBitmapManager, which uses a sizeFunction that estimates very closely the bitmap overhead in memory (basically, it counts the number of pixels and multiplies it by 4 bytes per pixel).
 
 ###Image scaling
 
