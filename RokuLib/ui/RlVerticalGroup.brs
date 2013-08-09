@@ -64,7 +64,6 @@ function RlVerticalGroup_Set() as Void
     	element = m.elements[i]
     	element.y = m.y + offset
     	element.x = m.x
-    	if element.Init <> invalid then element.Init()
     	if element.Set <> invalid then element.Set()
     	offset = offset + element.height + m.offset 
     end for

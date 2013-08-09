@@ -23,8 +23,9 @@ function RlTextArea(text as String, font as Object, rgba as Integer, x as Intege
         spacing: spacing
         align: align
         
-        Draw: TextArea_Draw
-        Init: TextArea_Init
+        Draw: RlTextArea_Draw
+        Init: RlTextArea_Init
+        Set: RlTextArea_Set
     }
     
     this.Init() 'Initialize all lines in the RlTextArea
@@ -35,7 +36,7 @@ end function
 'Draws this RlTextArea object to the specified component
 '@param screen a roScreen/roBitmap/roRegion object
 '@return true if successful
-function TextArea_Draw(component as Object) as Boolean
+function RlTextArea_Draw(component as Object) as Boolean
     for each line in m.textLines
         if not line.Draw(component)
             return false
@@ -46,7 +47,7 @@ end function
 
 'Sets the text of this RlTextArea
 '@param text the text to be shown in the RlTextArea
-function TextArea_Init() as Void
+function RlTextArea_Init() as Void
     words = stringToWords(m.text)
     wordMax = words.Count() - 1
     
@@ -67,7 +68,12 @@ function TextArea_Init() as Void
        
         while words.Count() > 0 and GetFontWidth(m.font, words[0]) <= m.width - GetFontWidth(m.font, lines[i]) 'While a word can fit in the remaining width
             if i < m.maxLines - 1 'Not on last line, just put the word as long as it fits
-                lines[i] = lines[i] + words.Shift() + " "
+            	if words[0] = "$n$" 'Special newline character
+            		words.Shift()
+            		exit while
+        		else
+                	lines[i] = lines[i] + words.Shift() + " "
+            	end if
             else if i = m.maxLines - 1 'Special case for the last line (possible ellipses)
                 if words.Count() = 1
                     lines[i] = lines[i] + words.Shift()
@@ -106,4 +112,8 @@ function TextArea_Init() as Void
     if m.height = invalid
     	m.height = tempHeight
     end if
+end function
+
+function RlTextArea_Set() as Void
+	m.Init() 'Need to reinitialize all text positions
 end function

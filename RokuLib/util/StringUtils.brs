@@ -17,7 +17,14 @@ end function
 'Tokenizes a string into an array of words (delimited by spaces and newlines) while fixing duplicate spaces
 '@param text the string to be tokenized
 Function StringToWords(text as String) as Object 
-    r = CreateObject("roRegex", "(\n|\r|\t| )+", "")
+    r = CreateObject("roRegex", "(\t| )+", "")
+    return r.Split(text)
+end function
+
+'Tokenizes a string into an array of words (delimited by spaces and newlines) while fixing duplicate spaces
+'@param text the string to be tokenized
+Function StringToLines(text as String) as Object 
+    r = CreateObject("roRegex", "( |\t|\r|\n)+", "")
     return r.Split(text)
 end function
 
