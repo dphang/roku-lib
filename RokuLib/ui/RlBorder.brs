@@ -17,12 +17,15 @@ function RlBorder(x as Integer, y as Integer, width as Integer, height as Intege
 end function 
 
 function RlBorder_Draw(component as Object) as Boolean
-    return RlDrawAll(m.items, component)
+	if m.top.x <> m.x then m.Init()
+	
+	items = [m.top, m.bottom, m.left, m.right]
+    return RlDrawAll(items, component)
 end function 
 
 function RlBorder_Init() as Void
-    outsideRectangle = RlRectangle(m.x, m.y, m.width, m.height, m.rgba)
-    insideRectangle = RlRectangle(m.x + m.thickness, m.y + m.thickness, m.width - 2 * m.thickness, m.height - 2 * m.thickness, &h00000000)
-
-    m.items = [outsideRectangle, insideRectangle]
+	m.top = RlRectangle(m.x, m.y, m.width, m.thickness, m.rgba)
+	m.bottom = RlRectangle(m.x, m.y + m.height - m.thickness, m.width, m.thickness, m.rgba)
+	m.left = RlRectangle(m.x, m.y, m.thickness, m.height, m.rgba)
+	m.right = RlRectangle(m.x + m.width - m.thickness, m.y, m.thickness, m.height, m.rgba)
 end function

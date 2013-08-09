@@ -20,6 +20,7 @@ function RlHorizontalGroup(offset = 0 as Integer, x = 0 as Integer, y = 0 as Int
         Count: RlHorizontalGroup_Count
         Draw: RlHorizontalGroup_Draw
         Set: RlHorizontalGroup_Set
+        SetFocused: RlHorizontalGroup_SetFocused
     }
     
     return this
@@ -31,13 +32,12 @@ function RlHorizontalGroup_Push(element as Object) as Void
     if m.elements.Count() <> 0
         previous = m.elements.Peek()
         element.x = previous.x + previous.width + m.offset
-        m.height = element.height
     else
         element.x = m.x
-        m.height = RlMax(m.height, element.height)
     end if    
     element.y = m.y
-    m.width = m.width + element.width
+    m.height = RlMax(m.height, element.height)
+    m.width = element.x - m.x + element.width
     if element.Init <> invalid then element.Init() 'Reinitialize element
     m.elements.Push(element)
 end function
@@ -70,25 +70,33 @@ end function
 function RlHorizontalGroup_Set() as Void
     max = m.elements.Count() - 1
     offset = 0
-    m.height = 0
-    m.width = 0
     for i = 0 to max
     	element = m.elements[i]
     	element.x = m.x + offset
     	element.y = m.y
     	if element.Init <> invalid then element.Init()
     	if element.Set <> invalid then element.Set()
-    	m.height = RlMax(m.height, element.height)
     	offset = offset + element.width + m.offset 
-    end for
-    
-    m.width = RlMax(offset - m.offset, 0) 'Account for last offset, also must be non-negative
+    end for 
+end function
+
+function RlHorizontalGroup_SetFocused(index as Integer) as Void
+	max = m.elements.Count() - 1
+	for i = 0 to max
+		element = m.elements[i]
+		if element.focused <> invalid
+			if i = index
+				element.focused = true
+			else
+				element.focused = false
+			end if
+		end if
+	end for
 end function
 
 'Draws this RlHorizontalGroup to the specified component
 '@param component a roScreen/roBitmap/roRegion object
 '@return true if successful
 function RlHorizontalGroup_Draw(component as Object) as Boolean
-	if m.x <> m.elements[0].x or m.x <> m.elements[0].y then m.Set() 'E.g. this group has changed x or y
     return RlDrawAll(m.elements, component)
 end function

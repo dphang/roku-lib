@@ -5,7 +5,7 @@
 '@param x the x coordinate of the main image
 '@param y the y coordinate of the main image
 '@param VISIBLE_IMAGES an Integer array containing two values, which respectively specify the number of images on the left and right of the main image. Default is [4, 4]
-function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, VISIBLE_IMAGES = [4, 4] as Object, ANIMATION_TIME = 0.25 as Float, WRAP_AROUND = false as Boolean) as Object
+function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, VISIBLE_IMAGES = [4, 4] as Object, ANIMATION_TIME = 0.25 as Float) as Object
     this = {
         bigShadow: bigShadow
         smallShadow: smallShadow

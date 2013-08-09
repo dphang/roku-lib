@@ -101,6 +101,7 @@ function RlByteCache_Clear() as Void
 end function
 
 function RlByteCache_Purge() as Void
+	print "Purging..."
     tmpArray = []
     
     for each key in m.items

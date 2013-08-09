@@ -3,7 +3,8 @@
 '@return a RlBitmapManager object
 function RlBitmapManager() as Object
     this = {
-        bitmaps: RlByteCache(14080000, RlBitmapSize) 'or about 88 200 x 200 images for the Roku 1
+    	bitmaps: RlByteCache(25600000, RlBitmapSize)
+        'bitmaps: RlByteCache(14080000, RlBitmapSize) 'or about 88 200 x 200 images for the Roku 1
         scaledBitmaps: {}
         
         GetBitmap: RlBitmapManager_GetBitmap
@@ -26,7 +27,6 @@ function RlBitmapManager_GetBitmap(path as String) as Dynamic
     end if
     
     bitmap = m.bitmaps.Get(path)
-
     return bitmap
 end function
 

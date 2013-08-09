@@ -39,9 +39,6 @@ function RlButton_Draw(component as Object) as Boolean
         x = m.x + (m.width - GetFontWidth(m.font, m.text)) / 2
         y = m.y + (m.height - GetFontHeight(m.font)) / 2
         m.textLine = RlText(m.text, m.font, m.rgba, x, y)
-    else
-        m.textLine.x = m.x
-        m.textLine.y = m.y
     end if
     
     if not m.textLine.Draw(component) then return false
