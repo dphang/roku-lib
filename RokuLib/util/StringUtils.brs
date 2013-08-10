@@ -21,10 +21,10 @@ Function StringToWords(text as String) as Object
     return r.Split(text)
 end function
 
-'Tokenizes a string into an array of words (delimited by spaces and newlines) while fixing duplicate spaces
+'Tokenizes a string into an array of lines (delimited by custom delimiter $n$)
 '@param text the string to be tokenized
 Function StringToLines(text as String) as Object 
-    r = CreateObject("roRegex", "( |\t|\r|\n)+", "")
+    r = CreateObject("roRegex", " *\$n\$ *", "")
     return r.Split(text)
 end function
 

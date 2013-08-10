@@ -90,6 +90,15 @@ function RlTextArea_Init() as Void
         if i = m.maxLines - 1 and words.Count() > 0 'Remaining words left on last line, put ellipses
             lines[i] = lines[i].Left(lines[i].Len() - 1) + ellipses
         end if
+        
+        'Trim extra whitespace
+        if lines[i].Left(lines[i].Len() - 1) = " "
+        	lines[i] = lines[i].Left(lines[i].Len() - 2)
+        end if
+        
+        if words.Count() = 0
+        	exit for
+        end if
     end for
     
     'Make Text elements for each line

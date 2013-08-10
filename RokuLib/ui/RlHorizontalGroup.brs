@@ -58,7 +58,9 @@ end function
 
 'Clears this RlHorizontalGroup
 function RlHorizontalGroup_Clear() as Void
-    m.elements.Clear()
+    m.elements = []
+    m.width = 0
+    m.height = 0
 end function
 
 '@return the size of this RlHorizontalGroup
