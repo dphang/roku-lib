@@ -36,13 +36,19 @@ function SecondsToString(time as Integer) as String
     seconds = time - minutes * 60
     
     temp = ""
+    if minutes < 10
+    	temp = temp + "0"
+    end if
+    
+    temp = temp + tostr(minutes) + ":"
+    
     if seconds < 10
         temp = temp + "0"
     end if
 
     temp = temp + tostr(seconds)
     
-    return tostr(minutes) + ":" + temp
+    return temp
 end function
 
 'Get font width / height
