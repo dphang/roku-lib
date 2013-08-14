@@ -6,12 +6,14 @@ function RlDownloadManager() as Object
         'Private variables
         start: 0
         duration: 0
+        downloadCount: 0
         urlArray: []
         
         Download: RlDownloadManager_Download
         DownloadBatch: RlDownloadManager_DownloadBatch
         Update: RlDownloadManager_Update
         Clear: RlDownloadManager_Clear
+        SetIndex: RlDownloadManager_SetIndex
     }
     
     return this
@@ -38,15 +40,14 @@ end function
 '@param duration the approximate maximum duration update should run, in milliseconds
 function RlDownloadManager_DownloadBatch(urlArray as Object, duration = 1 as Integer) as Void
     m.urlArray = ArrayCopy(urlArray)
-    m.start = 0
+    m.start = 0 'Private counter
+    m.index = 0 'Index url everything is relative to (images are downloaded outwards)
     m.count = m.urlArray.Count()
     m.duration = duration
 end function
 
 function RlDownloadManager_Clear() as Void
     m.requests.Clear()
-    'fs = CreateObject("roFilesystem")
-    'fs.Delete("tmp:/")
 end function
 
 function RlDownloadManager_Update() as Boolean
@@ -54,13 +55,29 @@ function RlDownloadManager_Update() as Boolean
     updated = false
     timer = CreateObject("roTimespan")
     if m.count <> 0 'Check if there is something to download
-        for i = m.start to m.count - 1 'Start at wherever we left off in a previous update
-            if (i - m.start >= 1) and m.duration > 0 and timer.TotalMilliseconds() > m.duration 'If running too long, return, but only if at least one was downlaoded
+    	atLeastOne = false
+        for i = m.start to 10000 'Start at wherever we left off in a previous update
+            if atLeastOne and m.duration > 0 and timer.TotalMilliseconds() > m.duration 'If running too long, return, but only if at least one was downlaoded
                 m.start = i
                 return updated
             end if
-            item = m.urlArray[i]
-            if item <> invalid then m.Download(item)
+            
+            if m.downloadCount >= m.count 'Finished downloading everything
+            	exit for
+            end if
+            
+            if RlModulo(i, 2) = 0 'To alternate between positive and negative numbers
+            	index = int(i / 2)
+            else
+            	index = int((- i - 1) / 2)
+            end if
+            
+            item = m.urlArray[m.index + index]
+            if item <> invalid 
+            	m.Download(item)
+            	m.downloadCount = m.downloadCount + 1
+        		atLeastOne = true
+        	end if
             updated = true 'If one pass finished, updated is set to true
         end for
         
@@ -68,6 +85,7 @@ function RlDownloadManager_Update() as Boolean
         m.urlArray = []
         m.start = 0
         m.count = 0
+        m.downloadCount = 0
     end if
     
     fs = CreateObject("roFileSystem")
@@ -86,4 +104,9 @@ function RlDownloadManager_Update() as Boolean
     
     
     return updated
+end function
+
+function RlDownloadManager_SetIndex(index as Integer) as Void
+	m.index = index
+	m.start = 0
 end function

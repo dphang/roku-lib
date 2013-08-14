@@ -12,6 +12,7 @@ function RlButtonText(name as String, font as Object, rgba as Integer, image as 
         
         Draw: RlButtonText_Draw
         Set: RlButtonText_Set
+        Copy: RlButtonText_Copy
     }
     
     this.Set()
@@ -37,4 +38,8 @@ function RlButtonText_Draw(screen as Object) as Boolean
     if m.x <> m.image.x or m.y <> m.image.y then m.Set()
     items = [m.image, m.text]
     return RlDrawAll(items, screen)
+end function
+
+function RlButtonText_Copy() as Object
+	return RlButtonText(m.text.text, m.text.font, m.text.rgba, m.image.Copy(), m.x, m.y, m.offset)
 end function

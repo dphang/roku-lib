@@ -32,14 +32,45 @@ function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object
         Draw: RlCarousel_Draw
         Update: RlCarousel_Update
         UpdateImages: RlCarousel_UpdateImages
+        SetIndex: RlCarousel_SetIndex
     }
     
     this.Init()
+    
     
     return this
 end function
 
 function RlCarousel_Init() as Void
+    smallWidth = m.smallShadow.width
+    smallHeight = m.smallShadow.height
+    bigOffsetX = m.bigShadow.offsetX
+    bigWidth = m.bigShadow.width
+    bigHeight = m.bigShadow.height
+    
+    actualX = m.x - bigOffsetX 'Since the main shadow has an offset shadow border
+    
+    'Positions to tell when to wrap, how to scale etc
+    m.wrapLeftX = actualX - m.VISIBLE_IMAGES[0] * smallWidth
+    m.wrapRightX = actualX + bigWidth + m.VISIBLE_IMAGES[1] * smallWidth 
+    m.centerX = actualX
+    m.leftX = actualX - smallWidth
+    m.rightX = actualX + bigWidth
+    
+    m.SetIndex(0)
+end function
+
+'Instantly sets the carousel to the specified index
+function RlCarousel_SetIndex(index as Integer) as Void
+	m.visibleImages = []
+	m.visibleShadows = []
+	m.index = index
+	m.moving = false
+	m.direction = 0
+	m.reversed = false
+	count = m.images.Count()
+	if count = 0 then return
+
     'Small shadow constants
     smallPath = m.smallShadow.path
     smallOffsetX = m.smallShadow.offsetX
@@ -54,45 +85,87 @@ function RlCarousel_Init() as Void
     bigWidth = m.bigShadow.width
     bigHeight = m.bigShadow.height
     
+    total = m.VISIBLE_IMAGES[0] + m.VISIBLE_IMAGES[1]
+    
     actualX = m.x - bigOffsetX 'Since the main shadow has an offset shadow border
+    'Shadows to left of big shadow
+    for i = 1 to m.VISIBLE_IMAGES[0]
+    	if index - i < 0 then exit for 'Out of bounds to the left
+        shadow = RlImage(smallPath, actualX - i * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
+        shadow.moveLeft = 0
+        shadow.moveCurrent = 0
+        shadow.moveTotal = 0
+        shadow.movePer = 100
+        shadow.index = index - i
+        shadow.offsetX = smallOffsetX
+        shadow.offsetY = smallOffsetY
+        m.visibleShadows.Unshift(shadow)
+        m.visibleImages.Unshift(invalid)
+    end for
     
-    max = m.images.Count()
-    'Initialize big shadow
-    if max <> 0
-        bigShadow = RlImage(bigPath, actualX, m.y, bigWidth, bigHeight)
-        bigShadow.moveLeft = 0
-        bigShadow.moveCurrent = 0
-        bigShadow.moveTotal = 0
-        bigShadow.movePer = 100
-        bigShadow.index = 0 'Save shadow index so we know what item index it refers to
-        bigShadow.offsetX = bigOffsetX
-        bigShadow.offsetY = bigOffsetY
-        m.visibleShadows.Push(bigShadow)
+    left = i - 1
+    
+	'Set big shadow
+    bigShadow = RlImage(bigPath, actualX, m.y, bigWidth, bigHeight)
+    bigShadow.moveLeft = 0
+    bigShadow.moveCurrent = 0
+    bigShadow.moveTotal = 0
+    bigShadow.movePer = 100
+    bigShadow.index = index
+    bigShadow.offsetX = bigOffsetX
+    bigShadow.offsetY = bigOffsetY
+    m.visibleShadows.Push(bigShadow)
+    m.visibleImages.Push(invalid)
+    
+    'Shadows to right of big shadow
+    for i = 1 to m.VISIBLE_IMAGES[1]
+    	if index + i > count - 1 then exit for 'Out of bounds to the right
+        shadow = RlImage(smallPath, actualX + bigWidth + (i - 1) * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
+        shadow.moveLeft = 0
+        shadow.moveCurrent = 0
+        shadow.moveTotal = 0
+        shadow.movePer = 100
+        shadow.index = index + i
+        shadow.offsetX = smallOffsetX
+        shadow.offsetY = smallOffsetY
+        m.visibleShadows.Push(shadow)
         m.visibleImages.Push(invalid)
-        
-        'Initialize small shadows
-        max = RlMin(m.VISIBLE_IMAGES[0] + m.VISIBLE_IMAGES[1] - 1, max - 2)
-        for i = 0 to max
-            shadow = RlImage(smallPath, actualX + bigWidth + i * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
-            shadow.moveLeft = 0
-            shadow.moveCurrent = 0
-            shadow.moveTotal = 0
-            shadow.movePer = 100
-            shadow.index = i + 1
-            shadow.offsetX = smallOffsetX
-            shadow.offsetY = smallOffsetY
-            m.visibleShadows.Push(shadow)
-            m.visibleImages.Push(invalid)
-        end for
-    end if
+    end for
     
-    'Positions to tell when to wrap, how to scale etc
-    m.wrapLeftX = actualX - m.VISIBLE_IMAGES[0] * smallWidth
-    m.wrapRightX = actualX + bigWidth + m.VISIBLE_IMAGES[1] * smallWidth 
-    m.centerX = actualX
-    m.leftX = actualX - smallWidth
-    m.rightX = actualX + bigWidth
-
+    right = i - 1
+    
+    if count + 1 < left + right then return 'Fewer items than visible shadows
+    
+    'Fill in leftover shadows
+    if right = m.VISIBLE_IMAGES[1] 'Keep adding to the right leftover images
+    	for i = m.VISIBLE_IMAGES[1] + 1 to total - left
+	    	if index + i > count - 1 then exit for 'Out of bounds to the right
+	        shadow = RlImage(smallPath, actualX + bigWidth + (i - 1) * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
+	        shadow.moveLeft = 0
+	        shadow.moveCurrent = 0
+	        shadow.moveTotal = 0
+	        shadow.movePer = 100
+	        shadow.index = index + i
+	        shadow.offsetX = smallOffsetX
+	        shadow.offsetY = smallOffsetY
+	        m.visibleShadows.Push(shadow)
+	        m.visibleImages.Push(invalid)
+    	end for
+	else if left = m.VISIBLE_IMAGES[0] 'Keep adding to the left any leftover images
+    	for i = m.VISIBLE_IMAGES[0] + 1 to total - right
+	    	if index - i < 0 then exit for 'Out of bounds to the left
+	        shadow = RlImage(smallPath, actualX - i * smallWidth, m.y + (bigHeight - smallHeight) / 2, smallWidth, smallHeight)
+	        shadow.moveLeft = 0
+	        shadow.moveCurrent = 0
+	        shadow.moveTotal = 0
+	        shadow.movePer = 100
+	        shadow.index = index - i
+	        shadow.offsetX = smallOffsetX
+	        shadow.offsetY = smallOffsetY
+	        m.visibleShadows.Unshift(shadow)
+	        m.visibleImages.Unshift(invalid)
+    	end for
+    end if
 end function
 
 'Set this carousel to start moving to the next item (right) or previous item (left).
@@ -116,17 +189,18 @@ function RlCarousel_Move(direction as Integer) as Void
     
     if direction <> 0
         'Calculate move amounts
+        
         max = m.visibleShadows.Count() - 1
         for i = 0 to max
             shadow = m.visibleShadows[i]
             if m.direction <> 0 and direction <> m.direction 'Animation reversed direction
-                shadow.moveLeft = shadow.moveCurrent' RlModulo(shadow.moveCurrent, shadow.movePer) 'Reverse movement to the nearest previous item
+                shadow.moveLeft = shadow.moveCurrent 'Reverse movement to the nearest previous item
                 shadow.moveCurrent = RlModulo(shadow.moveLeft, shadow.movePer)
                 shadow.moveTotal = shadow.movePer 'Total move amount treated like it's moving one complete unit
-                m.reversed = true  
+                m.reversed = not m.reversed
             else if not m.moving' Continuing in same direction, or new direction
             	m.reversed = false
-                if shadow.index = m.index 'm.centerX 'Shadow is the big shadow
+                if shadow.index = m.index 'Shadow is the big shadow
                     if direction < 0
                         shadow.moveTotal = bigWidth
                     else if direction > 0
@@ -142,7 +216,6 @@ function RlCarousel_Move(direction as Integer) as Void
                     end if
                 end if
 
-
                 if m.direction = 0 'Starting from 0
                     shadow.movePer = shadow.moveTotal
                     shadow.moveCurrent = 0
@@ -151,15 +224,7 @@ function RlCarousel_Move(direction as Integer) as Void
                     shadow.movePer = shadow.moveTotal 'Left/right movement of 1 unit
                     shadow.moveTotal = shadow.moveLeft + shadow.moveTotal
                     shadow.moveLeft = shadow.moveTotal
-                    'Clamp move left to be however much movement is available
-                    if direction > 0
-                        diff = m.images.Count() - 2 - m.index
-                    else if direction < 0
-                        diff = m.index - 1
-                    end if
-                    shadow.moveLeft = RlMin(shadow.moveLeft, RlModulo(shadow.moveLeft, shadow.movePer) + (diff * shadow.movePer))
                 end if
-
             end if
         end for
 
@@ -271,7 +336,7 @@ function RlCarousel_Update(delta as Float) as Boolean
         end if
     end for
     
-    m.UpdateImages()
+    updated = m.UpdateImages()
     
     return updated
 end function
