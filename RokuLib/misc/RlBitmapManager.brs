@@ -11,6 +11,7 @@ function RlBitmapManager(size as Integer) as Object
         ClearBitmap: RlBitmapManager_ClearBitmap
         Clear: RlBitmapManager_Clear
         ClearScaled: RlBitmapManager_ClearScaled
+        Exists: RlBitmapManager_Exists
     }
         
     return this
@@ -56,6 +57,10 @@ function RlBitmapManager_ClearBitmap(path as String) as Void
         m.bitmaps[path] = invalid
         m.bitmaps.Delete(path)
     end if
+end function
+
+function RlBitmapManager_Exists(path as String) as Boolean
+	return m.bitmaps.DoesExist(path)
 end function
 
 'Clears a random allocated roBitmaps

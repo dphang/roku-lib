@@ -30,6 +30,7 @@ function RlDownloadManager_Download(url as String) as void
 	        path = GetPathFromUrl(url)
 	        request.AsyncGetToFile(path)
         end while
+        m.downloadCount = m.downloadCount + 1
         m.requests[name] = request
     end if
 end function
@@ -72,10 +73,9 @@ function RlDownloadManager_Update() as Boolean
             	index = int((- i - 1) / 2)
             end if
             
-            item = m.urlArray[m.index + index]
-            if item <> invalid 
-            	m.Download(item)
-            	m.downloadCount = m.downloadCount + 1
+            url = m.urlArray[m.index + index]
+            if url <> invalid 
+            	m.Download(url)
         		atLeastOne = true
         	end if
             updated = true 'If one pass finished, updated is set to true

@@ -5,13 +5,16 @@
 '@param x the x coordinate of the main image
 '@param y the y coordinate of the main image
 '@param VISIBLE_IMAGES an Integer array containing two values, which respectively specify the number of images on the left and right of the main image. Default is [4, 4]
-function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, VISIBLE_IMAGES = [4, 4] as Object, ANIMATION_TIME = 0.25 as Float) as Object
+function RlCarousel(images as Object, bigShadow as Object, smallShadow as Object, x as Integer, y as Integer, VISIBLE_IMAGES = [4, 4] as Object, ANIMATION_TIME = 0.25 as Float, animate = true as Boolean) as Object
     this = {
         bigShadow: bigShadow
         smallShadow: smallShadow
         images: images
         x: x
         y: y
+        animate: animate
+        
+        bitmapManager: m.bitmapManager
         
         visibleImages: []
         visibleShadows: []
@@ -374,7 +377,7 @@ function RlCarousel_UpdateImages() as Boolean
                 width = shadow.width - 2 * shadow.offsetX
                 height = shadow.height - 2 * shadow.offsetY
                 image = RlImage(path, x, y, width, height, niceScaling) 'Build an image from the path corresponding to the shadow's index if it exists
-                updated = true
+                if not m.bitmapManager.Exists(path) then updated = true 
             end if
         end if
         
