@@ -1,10 +1,9 @@
 'Bitmap manager which manages and allocates bitmaps using and LRU cache.
 '(multiple bitmaps created from the same path)
 '@return a RlBitmapManager object
-function RlBitmapManager() as Object
+function RlBitmapManager(size as Integer) as Object
     this = {
-    	bitmaps: RlByteCache(25600000, RlBitmapSize)
-        'bitmaps: RlByteCache(14080000, RlBitmapSize) 'or about 88 200 x 200 images for the Roku 1
+    	bitmaps: RlByteCache(size, RlBitmapSize)
         scaledBitmaps: {}
         
         GetBitmap: RlBitmapManager_GetBitmap
