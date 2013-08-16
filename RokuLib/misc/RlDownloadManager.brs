@@ -102,7 +102,6 @@ function RlDownloadManager_Update() as Boolean
         doneOnce = true
     end for
     
-    
     return updated
 end function
 

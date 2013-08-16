@@ -1,7 +1,6 @@
-'Calculates an estimated size of a bitmap, base on the byte array of the bitmap.
+'Calculates an estimated size of a bitmap, based on a 32 bit per pixel memory usage of a bitmap
 function RlBitmapSize(bitmap as Object) as Integer
     return bitmap.GetWidth() * bitmap.GetHeight() * 4
-    'return bitmap.GetByteArray(0, 0, bitmap.GetWidth(), bitmap.GetHeight()).Count()
 end function
 
 'Hack-ish method to get a scaled image from existing bitmap using bilinear algorithm. For some reason the Roku 1 does not support
