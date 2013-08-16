@@ -14,13 +14,13 @@ function RlHorizontalGroup(offset = 0 as Integer, x = 0 as Integer, y = 0 as Int
         elements: []
         
         Push: RlHorizontalGroup_Push
-        Pop: RlHorizontalGroup_Pop
+        Pop: RlGroup_Pop
         Append: RlHorizontalGroup_Append
         Clear: RlHorizontalGroup_Clear
-        Count: RlHorizontalGroup_Count
-        Draw: RlHorizontalGroup_Draw
+        Count: RlGroup_Count
+        Draw: RlGroup_Draw
         Set: RlHorizontalGroup_Set
-        SetFocused: RlHorizontalGroup_SetFocused
+        SetFocused: RlGroup_SetFocused
     }
     
     return this
@@ -42,11 +42,6 @@ function RlHorizontalGroup_Push(element as Object) as Void
     m.elements.Push(element)
 end function
 
-'Pops the UI element at the end of this RlHorizontalGroup
-function RlHorizontalGroup_Pop() as Void
-    m.elements.Pop()
-end function
-
 'Adds multiple UI elements to the end of this RlHorizontalGroup
 '@param elements an Array of elements
 function RlHorizontalGroup_Append(elements as Object) as Void
@@ -63,11 +58,6 @@ function RlHorizontalGroup_Clear() as Void
     m.height = 0
 end function
 
-'@return the size of this RlHorizontalGroup
-function RlHorizontalGroup_Count() as Integer
-    return m.elements.Count()
-end function
-
 'Sets the position of all elements.
 function RlHorizontalGroup_Set() as Void
     max = m.elements.Count() - 1
@@ -80,20 +70,6 @@ function RlHorizontalGroup_Set() as Void
     	if element.Set <> invalid then element.Set()
     	offset = offset + element.width + m.offset 
     end for 
-end function
-
-function RlHorizontalGroup_SetFocused(index as Integer) as Void
-	max = m.elements.Count() - 1
-	for i = 0 to max
-		element = m.elements[i]
-		if element.focused <> invalid
-			if i = index
-				element.focused = true
-			else
-				element.focused = false
-			end if
-		end if
-	end for
 end function
 
 'Draws this RlHorizontalGroup to the specified component

@@ -14,13 +14,13 @@ function RlVerticalGroup(offset as Integer, x as Integer, y as Integer) as Objec
         elements: []
         
         Push: RlVerticalGroup_Push
-        Pop: RlVerticalGroup_Pop
+        Pop: RlGroup_Pop
         Append: RlVerticalGroup_Append
         Clear: RlVerticalGroup_Clear
-        Count: RlVerticalGroup_Count
-        Draw: RlVerticalGroup_Draw
+        Count: RlGroup_Count
+        Draw: RlGroup_Draw
         Set: RlVerticalGroup_Set
-        SetFocused: RlVerticalGroup_SetFocused
+        SetFocused: RlGroup_SetFocused
     }
     
     return this
@@ -40,11 +40,6 @@ function RlVerticalGroup_Push(element as Object) as Void
     m.height = element.y - m.y + element.height
     element.x = m.x
     m.elements.Push(element)
-end function
-
-'Pops the UI element at the end of this RlVerticalGroup
-function RlVerticalGroup_Pop() as Void
-    m.elements.Pop()
 end function
 
 'Adds multiple UI elements to the end of this RlVerticalGroup
@@ -69,35 +64,9 @@ function RlVerticalGroup_Set() as Void
     end for
 end function
 
-function RlVerticalGroup_SetFocused(index as Integer) as Void
-	max = m.elements.Count() - 1
-	for i = 0 to max
-		element = m.elements[i]
-		if element.focused <> invalid
-			if i = index
-				element.focused = true
-			else
-				element.focused = false
-			end if
-		end if
-	end for
-end function
-
 'Clears this RlVerticalGroup
 function RlVerticalGroup_Clear() as Void
     m.elements = []
     m.width = 0
     m.height = 0
-end function
-
-'@return the size of this RlVerticalGroup
-function RlVerticalGroup_Count() as Integer
-    return m.elements.Count()
-end function
-
-'Draws this RlVerticalGroup to the specified component
-'@param component a roScreen/roBitmap/roRegion object
-'@return true if successful
-function RlVerticalGroup_Draw(component as Object) as Boolean
-    return RlDrawAll(m.elements, component)
 end function
