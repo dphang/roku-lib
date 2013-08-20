@@ -32,3 +32,22 @@ function ArrayInsert(array as Object, index as Integer, value as Dynamic) as Obj
 
     return temp
 end function
+
+'Splits an array into several smaller arrays.
+Function ArraySplit(array as Object, count as Integer) as Object
+    o = []
+    if array <> invalid and count <> invalid
+        n = 0
+        o[n] = []
+        max = array.Count() - 1
+        for i = 0 to max
+            if o[n].Count() >= count
+                n = n + 1
+                o[n] = []
+            end if
+            o[n].Push(array[i])
+        end for
+    end if
+    
+    return o
+End Function
