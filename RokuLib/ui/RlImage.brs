@@ -30,21 +30,24 @@ end function
 '@param conservative if set to true, the associated roBitmap is immediately deallocated after drawing, if possible
 '@return true if successful
 function RlImage_Draw(component as Object) as Boolean
-    'Lazy allocation
-    if m.niceScaling
-    	bitmap = m.bitmapManager.GetScaledBitmap(m.path, m.width, m.height, 1)
-    else
-		bitmap = m.bitmapManager.GetBitmap(m.path)
+    success = true
+    if m.path <> ""
+        'Lazy allocation
+	    if m.niceScaling
+	    	bitmap = m.bitmapManager.GetScaledBitmap(m.path, m.width, m.height, 1)
+	    else
+			bitmap = m.bitmapManager.GetBitmap(m.path)
+		end if
+	    
+	    'Draw image
+	    if not m.niceScaling and (m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight()) 'Scaled draw
+	        scaleX = m.width / bitmap.GetWidth()
+	        scaleY = m.height / bitmap.GetHeight()
+			success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, bitmap)
+	    else 'Normal draw or nice scaling draw (bitmap returned already at correct width and height)
+	        success = component.DrawObject(m.x, m.y, bitmap)
+	    end if
 	end if
-    
-    'Draw image
-    if not m.niceScaling and (m.width <> bitmap.GetWidth() or m.height <> bitmap.GetHeight()) 'Scaled draw
-        scaleX = m.width / bitmap.GetWidth()
-        scaleY = m.height / bitmap.GetHeight()
-		success = component.DrawScaledObject(m.x, m.y, scaleX, scaleY, bitmap)
-    else 'Normal draw or nice scaling draw (bitmap returned already at correct width and height)
-        success = component.DrawObject(m.x, m.y, bitmap)
-    end if
     
     return success
 end function
