@@ -9,7 +9,7 @@ function RlDrawAll(array as Object, component as Object) as Boolean
     success = true
     for i = 0 to max
         item = array[i]
-        if item <> invalid and not item.Draw(component) then success = false
+        if item <> invalid and (item.visible = invalid or item.visible) and not item.Draw(component) then success = false
     end for
     return success
 end function
