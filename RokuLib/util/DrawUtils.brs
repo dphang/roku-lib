@@ -4,10 +4,14 @@
 '@param array a roArray object
 '@param component a roScreen/roBitmap/roRegion object
 '@return true if successful
-function RlDrawAll(array as Object, component as Object) as Boolean
+function RlDrawAll(array as Object, component as Object, duration = invalid as Dynamic) as Boolean
+    if duration <> invalid then timer = CreateObject("roTimespan")
     max = array.Count() - 1
     success = true
     for i = 0 to max
+        if duration <> invalid and timer.TotalMilliseconds() > duration
+            return success
+        end if
         item = array[i]
         if item <> invalid and (item.visible = invalid or item.visible) and not item.Draw(component) then success = false
     end for

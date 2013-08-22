@@ -174,7 +174,11 @@ end function
 'Set this carousel to start moving to the next item (right) or previous item (left).
 '@param direction the direction to move in. 1 for right and -1 for left.
 function RlCarousel_Move(direction as Integer) as Void
-    'print "RlCarousel.Move()"
+	if not m.animate
+		m.SetIndex(m.index + direction)
+		return
+	end if
+	
     'Small shadow constants
     smallPath = m.smallShadow.path
     smallOffsetX = m.smallShadow.offsetX
@@ -339,7 +343,9 @@ function RlCarousel_Update(delta as Float) as Boolean
         end if
     end for
     
-    updated = m.UpdateImages()
+    if m.UpdateImages()
+    	updated = true
+    end if
     
     return updated
 end function
@@ -349,7 +355,7 @@ end function
 '@return true if successful
 function RlCarousel_Draw(component as Object) as Boolean
     if not RlDrawAll(m.visibleShadows, component) then return false
-    if not RlDrawAll(m.visibleImages, component) then return false
+    if not RlDrawAll(m.visibleImages, component, 250) then return false
     return true
 end function
 
@@ -367,6 +373,7 @@ function RlCarousel_UpdateImages() as Boolean
     for i = 0 to max
         shadow = m.visibleShadows[i] 'Get the shadow to overlay the image on
         visibleImage = m.visibleImages[i]
+        if visibleImage = invalid then updated = true
         
         image = invalid
         path = m.images[shadow.index]
@@ -377,7 +384,6 @@ function RlCarousel_UpdateImages() as Boolean
                 width = shadow.width - 2 * shadow.offsetX
                 height = shadow.height - 2 * shadow.offsetY
                 image = RlImage(path, x, y, width, height, niceScaling) 'Build an image from the path corresponding to the shadow's index if it exists
-                if not m.bitmapManager.Exists(path) then updated = true 
             end if
         end if
         
