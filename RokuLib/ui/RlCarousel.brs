@@ -59,7 +59,7 @@ function RlCarousel_Init() as Void
     m.centerX = actualX
     m.leftX = actualX - smallWidth
     m.rightX = actualX + bigWidth
-    
+
     m.SetIndex(0)
 end function
 
@@ -246,9 +246,9 @@ end function
 '@param delta the change in time value
 '@return true if updated
 function RlCarousel_Update(delta as Float) as Boolean
+
     updated = false
     max = m.visibleShadows.Count() - 1
-	
     if m.moving
         'Move each shadow if animation time is nonzero
         for i = 0 to max
@@ -270,7 +270,7 @@ function RlCarousel_Update(delta as Float) as Boolean
                 m.moving = false
             end if
         end for
-	    
+
 	    'Scale the shadows appropriately as they pass through the center scaling point
 	    for i = 0 to max
 	    	shadow = m.visibleShadows[i]
@@ -323,7 +323,7 @@ function RlCarousel_Update(delta as Float) as Boolean
     	m.direction = 0
         m.reversed = false
     end if
-    
+
     for i = 0 to max
     	shadow = m.visibleShadows[i]
         if shadow.moveCurrent >= shadow.movePer and not m.reversed 'I.e. moved past a single unit
@@ -342,11 +342,11 @@ function RlCarousel_Update(delta as Float) as Boolean
             end if
         end if
     end for
-    
+
     if m.UpdateImages()
     	updated = true
     end if
-    
+
     return updated
 end function
 
@@ -364,11 +364,6 @@ function RlCarousel_UpdateImages() as Boolean
 	fs = CreateObject("roFileSystem")
     max = m.visibleShadows.Count() - 1 
     updated = false
-    if not m.moving or m.ANIMATION_TIME = 0 'We don't need to use bilinear scaling if the carousel is moving, since user won't notice it
-        niceScaling = true
-    else
-        niceScaling = false
-    end if
     
     for i = 0 to max
         shadow = m.visibleShadows[i] 'Get the shadow to overlay the image on
@@ -377,19 +372,17 @@ function RlCarousel_UpdateImages() as Boolean
         
         image = invalid
         path = m.images[shadow.index]
-        if m.ANIMATION_TIME > 0.1 or m.ANIMATION_TIME = 0
-            if fs.Exists(path) 
-                x = shadow.x + shadow.offsetX
-                y = shadow.y + shadow.offsetY
-                width = shadow.width - 2 * shadow.offsetX
-                height = shadow.height - 2 * shadow.offsetY
-                image = RlImage(path, x, y, width, height, niceScaling) 'Build an image from the path corresponding to the shadow's index if it exists
-            end if
-        end if
-        
+        if m.ANIMATION_TIME > 0.1 and fs.exists(path)
+            x = shadow.x + shadow.offsetX
+            y = shadow.y + shadow.offsetY
+            width = shadow.width - 2 * shadow.offsetX
+            height = shadow.height - 2 * shadow.offsetY
+            image = RlImage(path, x, y, width, height, not m.moving) 'Build an image from the path corresponding to the shadow's index if it exists
+		end if
+
         'Add the image to to the visible images
         m.visibleImages[i] = image
     end for
-    
+
     return updated
 end function
