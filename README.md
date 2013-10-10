@@ -113,3 +113,7 @@ I've written a function to get a bilinearly scaled bitmap using ``roRegion`` to 
 Roku developers know that ``roBitmaps`` are expensive to both create and store in memory (on the Roku 1, about 50-100 ms depending on bitmap dimensions). I've used lazy allocation and a manager to help with this: bitmaps are only allocated when they are needed (e.g. for a draw call). In addition, bitmap references are not stored in ``RlImage`` objects; they are stored in ``RlBitmapManager``. Hopefully this makes deallocating them easier, because can clear them in ``RlBitmapManager``. 
 
 Though it is currently incomplete, I'm almost done implementing an LRU byte cache - similar to the one used for Android bitmaps. This be used in conjunction with the bitmap manager to maximize memory use and reduce bitmap creation overhead.
+
+##License
+
+RokuLib is released under the [MIT License](LICENSE)
