@@ -116,4 +116,4 @@ Though it is currently incomplete, I'm almost done implementing an LRU byte cach
 
 ##License
 
-RokuLib is released under the [MIT License](LICENSE)
+RokuLib is released under the [MIT License](LICENSE).
