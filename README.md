@@ -1,7 +1,7 @@
+**Update: This is unmaintained and is not really completely functional by itself without some hacking on your own. I hope you find some of the code useful (e.g sorting utilities and LRU cache).**
+
 RokuLib
 =======
-
-Update: Please note that I have had other commitments, so I haven't really been working on this library, as you can see from the commit history. But I hope you find some of the code useful (especially the sorting utilities and LRU cache).  
 
 Lightweight library for making Roku UI development easier, especially if using the ``roScreen`` component. Currently incomplete, but hopefully I will have most of the library done by the end of August 2013.
 
